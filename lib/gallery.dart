@@ -1,3 +1,4 @@
+import 'package:electronic_card_app/font_styles.dart';
 import 'package:flutter/material.dart';
 
 // Global color constant
@@ -76,11 +77,23 @@ class _GalleryPageState extends State<GalleryPage> {
               // Gallery Title
               Text(
                 'Gallery',
-                style: TextStyle(
-                  fontSize: 48,
+                style: AppFonts.ttHovesPro(
+                  fontSize: 60,
                   color: Colors.white,
-                  fontWeight: FontWeight.w300,
+                  fontWeight: AppFonts.regular,
                   fontStyle: FontStyle.italic,
+                  shadows: [
+                    Shadow(
+                      color: Colors.black.withOpacity(0.3),
+                      offset: const Offset(2, 2),
+                      blurRadius: 4,
+                    ),
+                    Shadow(
+                      color: Colors.black.withOpacity(0.1),
+                      offset: const Offset(4, 4),
+                      blurRadius: 8,
+                    ),
+                  ],
                 ),
                 textAlign: TextAlign.center,
               ),
@@ -119,7 +132,7 @@ class _GalleryPageState extends State<GalleryPage> {
                             child: ClipRRect(
                               borderRadius: BorderRadius.circular(15),
                               child: Image.asset(
-                                'assets/images/gallery-preview.GIF',
+                                'assets/images/gallery-preview.jpeg',
                                 fit: BoxFit.cover,
                                 errorBuilder: (context, error, stackTrace) {
                                   return Container(
@@ -227,12 +240,12 @@ class _GalleryPageState extends State<GalleryPage> {
       PageRouteBuilder(
         opaque: false,
         barrierColor: Colors.transparent,
-        transitionDuration: const Duration(milliseconds: 400),
-        reverseTransitionDuration: const Duration(milliseconds: 300),
+        transitionDuration: const Duration(milliseconds: 600),
+        reverseTransitionDuration: const Duration(milliseconds: 400),
         pageBuilder: (context, animation, secondaryAnimation) {
           return FadeTransition(
             opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
-              CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+              CurvedAnimation(parent: animation, curve: Curves.fastOutSlowIn),
             ),
             child: FullGalleryModal(images: galleryImages),
           );

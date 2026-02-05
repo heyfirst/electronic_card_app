@@ -88,6 +88,7 @@ class AppFonts {
     FontStyle fontStyle = FontStyle.normal,
     double letterSpacing = 0.0,
     double? height,
+    List<Shadow>? shadows,
   }) {
     return TextStyle(
       fontFamily: _getFontWithFallback('TT_Hoves_Pro'),
@@ -97,6 +98,7 @@ class AppFonts {
       fontStyle: fontStyle,
       letterSpacing: letterSpacing,
       height: height,
+      shadows: shadows,
       fontFamilyFallback: const ['Roboto', 'Helvetica', 'Arial', 'sans-serif'],
     );
   }
