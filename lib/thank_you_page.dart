@@ -151,12 +151,13 @@ class _ThankYouPageState extends State<ThankYouPage>
     final bool isLargeScreen = screenWidth > 450;
 
     return Container(
-      height: isLargeScreen ? 56.0 : null, // Facebook navbar standard height
+      height: isLargeScreen
+          ? 80.0
+          : null, // Increased height to accommodate larger logo
       padding: isLargeScreen
           ? const EdgeInsets.symmetric(
               horizontal: 20.0,
-              vertical:
-                  8.0, // Reduced vertical padding for standard navbar height
+              vertical: 12.0, // Increased vertical padding
             )
           : const EdgeInsets.all(40.0), // Original padding
       decoration: isLargeScreen
@@ -179,7 +180,7 @@ class _ThankYouPageState extends State<ThankYouPage>
               children: [
                 Image.asset(
                   'assets/images/tag-thank-you.png',
-                  height: 60, // Increased from 32 to 40
+                  height: 80, // Increased from 60 to 80
                   fit: BoxFit.contain,
                 ),
                 // Add more navbar items here if needed
