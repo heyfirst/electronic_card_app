@@ -31,13 +31,13 @@ jobs:
               run: flutter test || true
 
             - name: Build web app
-              run: flutter build web --release
+              run: flutter build web --release --dart-define=API_BASE_URL="${{ secrets.API_BASE_URL }}"
 
             - name: Set up Fly CLI
               uses: superfly/flyctl-actions/setup-flyctl@master
 
             - name: Deploy to Fly.io
-              run: flyctl deploy --remote-only
+              run: flyctl deploy --remote-only --build-arg API_BASE_URL="${{ secrets.API_BASE_URL }}"
               env:
                   FLY_API_TOKEN: ${{ secrets.FLY_API_TOKEN }}
 

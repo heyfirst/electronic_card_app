@@ -50,11 +50,13 @@ This project supports both **manual** and **automatic** deployment to Fly.io.
     flyctl auth token
     ```
 
-2. **Add GitHub Secret:**
+2. **Add GitHub Secrets:**
     - Go to GitHub repository → Settings → Secrets and variables → Actions
-    - Create new secret:
-        - Name: `FLY_API_TOKEN`
-        - Value: [your fly.io token from step 1]
+    - Create these secrets:
+        - Name: `FLY_API_TOKEN`  
+          Value: [your fly.io token from step 1]
+        - Name: `API_BASE_URL` (optional)  
+          Value: `[your url service]`
 
 3. **Push to main branch:**
 

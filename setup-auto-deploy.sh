@@ -17,12 +17,15 @@ echo -e "${YELLOW}1. Get your Fly.io API Token:${NC}"
 echo "   flyctl auth token"
 echo
 
-echo -e "${YELLOW}2. Add the token to GitHub repository secrets:${NC}"
+echo -e "${YELLOW}2. Add secrets to GitHub repository:${NC}"
 echo "   - Go to your GitHub repository"
 echo "   - Navigate to Settings > Secrets and variables > Actions"
-echo "   - Click 'New repository secret'"
-echo "   - Name: FLY_API_TOKEN"
-echo "   - Value: [paste your token from step 1]"
+echo "   - Add these secrets:"
+echo "     • Name: FLY_API_TOKEN"
+echo "       Value: [paste your token from step 1]"
+echo "     • Name: API_BASE_URL"
+echo "       Value: [your api base]"
+echo "   - Click 'New repository secret' for each one"
 echo
 
 echo -e "${YELLOW}3. Push to main branch:${NC}"

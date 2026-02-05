@@ -1,10 +1,16 @@
-import 'package:flutter_dotenv/flutter_dotenv.dart';
-
 // Global API Configuration
 class ApiConfig {
-  // Base API URL - loaded from .env file
-  static String get baseUrl =>
-      dotenv.env['API_BASE_URL'] ?? 'http://localhost:3000/api';
+  // Base API URL - loaded from dart-define or fallback to localhost
+  static String get baseUrl {
+    // Check for dart-define first (for production builds)
+    const apiUrl = String.fromEnvironment('API_BASE_URL');
+    if (apiUrl.isNotEmpty) {
+      return apiUrl;
+    }
+
+    // Fallback to localhost for development
+    return 'http://localhost:3000/api';
+  }
 
   // API Endpoints
   static String get uploadCardImage => '$baseUrl/upload/card-image';

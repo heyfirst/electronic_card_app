@@ -30,13 +30,15 @@ echo "🧹 Cleaning previous builds..."
 flutter clean
 flutter pub get
 
-# Build Flutter web
+# Build Flutter web with API configuration from secrets
 echo "🔨 Building Flutter web app..."
-flutter build web --release
+# Get API_BASE_URL from fly secrets
+API_BASE_URL=$(flyctl secrets list | grep API_BASE_URL | awk '{print $2}')
+flutter build web --release --dart-define=API_BASE_URL="$API_BASE_URL"
 
-# Deploy to fly.io
+# Deploy to fly.io with build args from secrets
 echo "🚀 Deploying to fly.io..."
-flyctl deploy
+flyctl deploy --build-arg API_BASE_URL="$API_BASE_URL"
 
 # Check status
 echo "✅ Deployment complete!"

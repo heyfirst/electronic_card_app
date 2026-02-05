@@ -33,7 +33,7 @@ jobs:
               run: flutter test --coverage
 
             - name: Build web (test)
-              run: flutter build web --release
+              run: flutter build web --release --dart-define=API_BASE_URL="${{ secrets.API_BASE_URL }}"
 
             - name: Upload coverage to Codecov
               uses: codecov/codecov-action@v3

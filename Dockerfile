@@ -16,8 +16,12 @@ COPY web/ web/
 COPY assets/ assets/
 COPY analysis_options.yaml ./
 
-# Build the Flutter web app with optimizations
-RUN flutter build web --release --dart-define=Dart2jsOptimization=O4 --source-maps
+# Build the Flutter web app with configurable API
+ARG API_BASE_URL
+RUN flutter build web --release \
+    --dart-define=API_BASE_URL="${API_BASE_URL}" \
+    --dart-define=Dart2jsOptimization=O4 \
+    --source-maps
 
 # Use nginx to serve the built web app
 FROM nginx:alpine
