@@ -7,14 +7,17 @@ WORKDIR /app
 # Copy pubspec.yaml and pubspec.lock first for better caching
 COPY pubspec.yaml pubspec.lock ./
 
-# Get dependencies
+# Get dependencies first (cached layer)
 RUN flutter pub get
 
-# Copy the rest of the source code
-COPY . .
+# Copy source code (excluding build artifacts and cache)
+COPY lib/ lib/
+COPY web/ web/
+COPY assets/ assets/
+COPY analysis_options.yaml ./
 
-# Build the Flutter web app
-RUN flutter build web --release
+# Build the Flutter web app with optimizations
+RUN flutter build web --release --dart-define=Dart2jsOptimization=O4 --source-maps
 
 # Use nginx to serve the built web app
 FROM nginx:alpine
