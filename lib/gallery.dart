@@ -226,10 +226,14 @@ class _GalleryPageState extends State<GalleryPage> {
     Navigator.of(context).push(
       PageRouteBuilder(
         opaque: false,
-        barrierColor: Colors.white.withOpacity(0.9),
+        barrierColor: Colors.transparent,
+        transitionDuration: const Duration(milliseconds: 400),
+        reverseTransitionDuration: const Duration(milliseconds: 300),
         pageBuilder: (context, animation, secondaryAnimation) {
           return FadeTransition(
-            opacity: animation,
+            opacity: Tween<double>(begin: 0.0, end: 1.0).animate(
+              CurvedAnimation(parent: animation, curve: Curves.easeInOut),
+            ),
             child: FullGalleryModal(images: galleryImages),
           );
         },
@@ -246,7 +250,7 @@ class FullGalleryModal extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      backgroundColor: Colors.white.withOpacity(0.95),
+      backgroundColor: Colors.white,
       body: SafeArea(
         child: Column(
           children: [
