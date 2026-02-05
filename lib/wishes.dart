@@ -339,8 +339,8 @@ class _WishesPageState extends State<WishesPage> {
                                             shape: BoxShape.circle,
                                             boxShadow: [
                                               BoxShadow(
-                                                color: Colors.red.withOpacity(
-                                                  0.4,
+                                                color: Colors.red.withValues(
+                                                  alpha: 0.4,
                                                 ),
                                                 spreadRadius: 1,
                                                 blurRadius: 4,
@@ -991,15 +991,6 @@ class _WishesPageState extends State<WishesPage> {
     }
   }
 
-  Future<String?> _getStoredUsername() async {
-    try {
-      final prefs = await SharedPreferences.getInstance();
-      return prefs.getString(usernameKey);
-    } catch (e) {
-      // print('Error getting stored username: $e');
-      return null;
-    }
-  }
 
   Future<void> _clearStoredToken() async {
     try {
@@ -1095,16 +1086,18 @@ class _WishesPageState extends State<WishesPage> {
         }
       }
     } catch (e) {
-      ScaffoldMessenger.of(context).showSnackBar(
-        SnackBar(
-          content: Text(
-            'เกิดข้อผิดพลาดในการเลือกรูปภาพ',
-            style: TextStyle(color: Colors.white),
+      if (mounted) {
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(
+            content: Text(
+              'เกิดข้อผิดพลาดในการเลือกรูปภาพ',
+              style: TextStyle(color: Colors.white),
+            ),
+            backgroundColor: Colors.red[400],
+            duration: Duration(seconds: 2),
           ),
-          backgroundColor: Colors.red[400],
-          duration: Duration(seconds: 2),
-        ),
-      );
+        );
+      }
     }
   }
 

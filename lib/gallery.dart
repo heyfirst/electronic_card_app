@@ -159,8 +159,8 @@ class _GalleryPageState extends State<GalleryPage> {
                                           Icon(
                                             Icons.photo_camera_outlined,
                                             size: 80,
-                                            color: kPrimaryColor.withOpacity(
-                                              0.6,
+                                            color: kPrimaryColor.withValues(
+                                              alpha: 0.6,
                                             ),
                                           ),
                                           const SizedBox(height: 15),
@@ -177,8 +177,8 @@ class _GalleryPageState extends State<GalleryPage> {
                                             'Coming Soon',
                                             style: TextStyle(
                                               fontSize: 14,
-                                              color: kPrimaryColor.withOpacity(
-                                                0.7,
+                                              color: kPrimaryColor.withValues(
+                                                alpha: 0.7,
                                               ),
                                             ),
                                           ),
