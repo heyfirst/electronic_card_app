@@ -92,13 +92,19 @@ class MyApp extends StatelessWidget {
         ),
       ),
       home: const SplashScreen(),
+      routes: {
+        '/home': (context) => const MyHomePage(),
+        '/thank-you': (context) => const MyHomePage(initialIndex: 4),
+      },
       debugShowCheckedModeBanner: false,
     );
   }
 }
 
 class MyHomePage extends StatefulWidget {
-  const MyHomePage({super.key});
+  final int initialIndex;
+
+  const MyHomePage({super.key, this.initialIndex = 0});
 
   @override
   State<MyHomePage> createState() => _MyHomePageState();
@@ -112,13 +118,13 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   late Animation<double> _flipAnimation;
   bool _isFlipped = false;
   int _currentIndex = 0;
-  final PageController _pageController = PageController();
 
   @override
   void initState() {
     super.initState();
     _weddingDate = DateTime(2026, 2, 26); // Wedding date: February 26, 2026
     _startTimer();
+    _currentIndex = widget.initialIndex; // Set initial index
 
     // Initialize flip animation
     _flipController = AnimationController(
@@ -153,7 +159,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
   void dispose() {
     _timer.cancel();
     _flipController.dispose();
-    _pageController.dispose();
     super.dispose();
   }
 
@@ -169,13 +174,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
     double logoSize = screenWidth * 0.5; // 50% of screen width
 
     return Scaffold(
-      body: PageView(
-        controller: _pageController,
-        onPageChanged: (index) {
-          setState(() {
-            _currentIndex = index;
-          });
-        },
+      body: IndexedStack(
+        index: _currentIndex,
         children: [
           // Wedding Invitation Page
           GestureDetector(
@@ -229,11 +229,6 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           setState(() {
             _currentIndex = index;
           });
-          _pageController.animateToPage(
-            index,
-            duration: const Duration(milliseconds: 300),
-            curve: Curves.easeInOut,
-          );
         },
         backgroundColor: Colors.white,
         selectedItemColor: kPrimaryColor,

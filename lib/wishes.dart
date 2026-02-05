@@ -1299,6 +1299,8 @@ class _WishesPageState extends State<WishesPage> {
                     setState(() {
                       _showSuccess = false;
                     });
+                    // Navigate to Thank You page using named route
+                    Navigator.of(context).pushReplacementNamed('/thank-you');
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[100],
