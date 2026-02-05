@@ -95,14 +95,14 @@ class _ThankYouPageState extends State<ThankYouPage>
           _isLoading = false;
         });
       } else {
-// print('Failed to load cards: ${response.statusCode}');
+        // print('Failed to load cards: ${response.statusCode}');
         setState(() {
           _wishes = [];
           _isLoading = false;
         });
       }
     } catch (e) {
-// print('Error loading wishes: $e');
+      // print('Error loading wishes: $e');
       setState(() {
         _wishes = [];
         _isLoading = false;
@@ -731,9 +731,9 @@ class _ThankYouPageState extends State<ThankYouPage>
         );
       },
       errorBuilder: (context, error, stackTrace) {
-// print('Image proxy error: $error');
-// print('Original URL: $imageUrl');
-// print('Proxy URL: $proxyUrl');
+        // print('Image proxy error: $error');
+        // print('Original URL: $imageUrl');
+        // print('Proxy URL: $proxyUrl');
 
         return Center(
           child: Column(
@@ -887,7 +887,7 @@ class _ThankYouPageState extends State<ThankYouPage>
 
       return Color(int.parse(colorCode, radix: 16));
     } catch (e) {
-// print('Error parsing color: $colorString');
+      // print('Error parsing color: $colorString');
       return kPrimaryColor; // fallback color
     }
   }
