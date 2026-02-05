@@ -8,7 +8,7 @@ class ApiConfig {
 
   // API Endpoints
   static String get uploadCardImage => '$baseUrl/upload/card-image';
-  static String get guestTokens => '$baseUrl/auth/tokens/guest';
+  static String get guestTokens => '$baseUrl/auth/guest/tokens';
   static String get cards => '$baseUrl/cards';
 
   // Helper method for image proxy

@@ -120,42 +120,6 @@ class _WishesPageState extends State<WishesPage> {
                     child: Column(
                       crossAxisAlignment: CrossAxisAlignment.start,
                       children: [
-                        // Name Field
-                        Text(
-                          'ชื่อของคุณ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            color: Colors.grey[800],
-                            fontWeight: FontWeight.w500,
-                          ),
-                        ),
-                        const SizedBox(height: 10),
-                        Container(
-                          width: double.infinity,
-                          decoration: BoxDecoration(
-                            border: Border.all(color: Colors.grey[300]!),
-                            borderRadius: BorderRadius.circular(12),
-                          ),
-                          child: TextField(
-                            controller: _nameController,
-                            decoration: InputDecoration(
-                              hintText: 'พิมพ์ชื่อคุณที่นี่...',
-                              hintStyle: TextStyle(
-                                color: Colors.grey[400],
-                                fontSize: 14,
-                              ),
-                              border: InputBorder.none,
-                              contentPadding: const EdgeInsets.all(15),
-                            ),
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[800],
-                            ),
-                          ),
-                        ),
-
-                        const SizedBox(height: 25),
-
                         // Wishes Field
                         Text(
                           'เขียนคำอวยพร',
@@ -442,11 +406,6 @@ class _WishesPageState extends State<WishesPage> {
   }
 
   void _sendWishes() async {
-    if (_nameController.text.trim().isEmpty) {
-      _showErrorSnackBar('กรุณาใส่ชื่อของคุณ');
-      return;
-    }
-
     if (_wishController.text.trim().isEmpty) {
       _showErrorSnackBar('กรุณาเขียนคำอวยพร');
       return;
@@ -503,23 +462,18 @@ class _WishesPageState extends State<WishesPage> {
     try {
       print('Starting API submission...');
 
-      final username = _nameController.text.trim();
       String? token;
 
       // Check if we have a stored token for this username
-      final storedUsername = await _getStoredUsername();
       final storedToken = await _getStoredToken();
 
-      if (storedUsername == username && storedToken != null) {
-        print('Using stored token for username: $username');
+      if (storedToken != null) {
         // แจ้งผู้ใช้ว่ากำลังใช้ token ที่เก็บไว้
-        _showInfoSnackBar('กำลังใช้ข้อมูลที่บันทึกไว้สำหรับ: $username');
         token = storedToken;
       } else {
         // Generate new token for this username
-        print('Generating new token for username: $username');
-        token = await _generateGuestToken(username);
-        await _saveToken(token, username);
+        token = await _generateGuestToken();
+        await _saveToken(token);
       }
 
       // Step 2: Prepare form data
@@ -533,12 +487,7 @@ class _WishesPageState extends State<WishesPage> {
       request.headers['Authorization'] = 'Bearer $token';
 
       // Add form fields
-      request.fields['title'] = username;
       request.fields['message'] = _wishController.text.trim();
-
-      print(
-        'Form fields added - title: $username, message length: ${_wishController.text.trim().length}',
-      );
 
       // Add image if selected
       if (kIsWeb && _selectedImagesData.isNotEmpty) {
@@ -614,14 +563,13 @@ class _WishesPageState extends State<WishesPage> {
     }
   }
 
-  Future<String> _generateGuestToken(String username) async {
+  Future<String> _generateGuestToken() async {
     try {
-      print('Generating guest token for: $username');
+      print('Generating guest token...');
       final response = await http
           .post(
             Uri.parse(ApiConfig.guestTokens),
             headers: {'Content-Type': 'application/json'},
-            body: json.encode({'username': username}),
           )
           .timeout(Duration(seconds: 10));
 
@@ -681,7 +629,7 @@ class _WishesPageState extends State<WishesPage> {
                 style: AppFonts.kanit(
                   color: kPrimaryColor,
                   fontSize: 20,
-                  fontWeight: AppFonts.light,
+                  fontWeight: AppFonts.bold,
                 ),
               ),
             ],
@@ -696,46 +644,19 @@ class _WishesPageState extends State<WishesPage> {
                   style: AppFonts.kanit(
                     fontSize: 16,
                     color: Colors.grey[700],
-                    fontWeight: AppFonts.light,
+                    fontWeight: AppFonts.medium,
                   ),
                 ),
                 const SizedBox(height: 16),
-
-                // Name preview
-                Container(
-                  width: double.infinity,
-                  padding: const EdgeInsets.all(12),
-                  decoration: BoxDecoration(
-                    color: Colors.grey[50],
-                    borderRadius: BorderRadius.circular(8),
-                    border: Border.all(color: Colors.grey[200]!),
-                  ),
-                  child: Column(
-                    crossAxisAlignment: CrossAxisAlignment.start,
-                    children: [
-                      Text(
-                        'ชื่อผู้ส่ง',
-                        style: AppFonts.kanit(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: AppFonts.light,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
-                      Text(
-                        _nameController.text.trim(),
-                        style: AppFonts.kanit(
-                          fontSize: 14,
-                          color: Colors.grey[800],
-                          fontWeight: AppFonts.light,
-                        ),
-                      ),
-                    ],
+                Text(
+                  'ข้อความอวยพร',
+                  style: AppFonts.kanit(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                    fontWeight: AppFonts.light,
                   ),
                 ),
-
-                const SizedBox(height: 12),
-
+                const SizedBox(height: 4),
                 // Message preview
                 Container(
                   width: double.infinity,
@@ -748,15 +669,6 @@ class _WishesPageState extends State<WishesPage> {
                   child: Column(
                     crossAxisAlignment: CrossAxisAlignment.start,
                     children: [
-                      Text(
-                        'ข้อความอวยพร',
-                        style: AppFonts.kanit(
-                          fontSize: 16,
-                          color: Colors.grey[600],
-                          fontWeight: AppFonts.light,
-                        ),
-                      ),
-                      const SizedBox(height: 4),
                       Text(
                         _wishController.text.trim(),
                         style: AppFonts.kanit(
@@ -905,16 +817,6 @@ class _WishesPageState extends State<WishesPage> {
     );
   }
 
-  void _showInfoSnackBar(String message) {
-    ScaffoldMessenger.of(context).showSnackBar(
-      SnackBar(
-        content: Text(message, style: TextStyle(color: Colors.white)),
-        backgroundColor: kPrimaryColor,
-        duration: Duration(seconds: 2),
-      ),
-    );
-  }
-
   void _showTimeNotReachedDialog(Map<String, dynamic> errorData) {
     showDialog(
       context: context,
@@ -1044,12 +946,10 @@ class _WishesPageState extends State<WishesPage> {
     }
   }
 
-  Future<void> _saveToken(String token, String username) async {
+  Future<void> _saveToken(String token) async {
     try {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(TOKEN_KEY, token);
-      await prefs.setString(USERNAME_KEY, username);
-      print('Token saved for username: $username');
     } catch (e) {
       print('Error saving token: $e');
     }
