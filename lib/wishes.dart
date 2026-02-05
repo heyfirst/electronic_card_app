@@ -212,7 +212,9 @@ class _WishesPageState extends State<WishesPage> {
                                   Container(
                                     padding: EdgeInsets.all(8),
                                     decoration: BoxDecoration(
-                                      color: kPrimaryColor.withValues(alpha: 0.15),
+                                      color: kPrimaryColor.withValues(
+                                        alpha: 0.15,
+                                      ),
                                       borderRadius: BorderRadius.circular(10),
                                     ),
                                     child: Icon(
@@ -448,7 +450,7 @@ class _WishesPageState extends State<WishesPage> {
           'เกิดข้อผิดพลาดในการส่งคำอวยพร กรุณาลองใหม่อีกครั้ง',
         );
       }
-// print('Error submitting wish: $e');
+      // print('Error submitting wish: $e');
     } finally {
       // Always clear form and hide loading after submit attempt
       setState(() {
@@ -460,7 +462,7 @@ class _WishesPageState extends State<WishesPage> {
 
   Future<void> _submitWishToAPI() async {
     try {
-// print('Starting API submission...');
+      // print('Starting API submission...');
 
       String? token;
 
@@ -477,7 +479,7 @@ class _WishesPageState extends State<WishesPage> {
       }
 
       // Step 2: Prepare form data
-// print('Preparing form data...');
+      // print('Preparing form data...');
       var request = http.MultipartRequest(
         'POST',
         Uri.parse(ApiConfig.uploadCardImage),
@@ -522,20 +524,20 @@ class _WishesPageState extends State<WishesPage> {
       }
 
       // Step 3: Send request
-// print('Sending wish data to server...');
+      // print('Sending wish data to server...');
       final streamedResponse = await request.send().timeout(
         Duration(seconds: 30),
       );
       final response = await http.Response.fromStream(streamedResponse);
 
-// print('Upload response status: ${response.statusCode}');
-// print('Upload response body: ${response.body}');
+      // print('Upload response status: ${response.statusCode}');
+      // print('Upload response body: ${response.body}');
 
       if (response.statusCode == 200 || response.statusCode == 201) {
-// print('Wish submitted successfully');
+        // print('Wish submitted successfully');
       } else if (response.statusCode == 401) {
         // Token expired or invalid, clear and try again
-// print('Token invalid, clearing and retrying...');
+        // print('Token invalid, clearing and retrying...');
         await _clearStoredToken();
         throw Exception('Token หมดอายุ กรุณาลองใหม่อีกครั้ง');
       } else {
@@ -544,24 +546,24 @@ class _WishesPageState extends State<WishesPage> {
         );
       }
     } on TimeoutException {
-// print('Request timeout');
+      // print('Request timeout');
       throw Exception(
         'การเชื่อมต่อหมดเวลา กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต',
       );
     } on SocketException {
-// print('Network error');
+      // print('Network error');
       throw Exception(
         'ไม่สามารถเชื่อมต่อเซิร์ฟเวอร์ได้ กรุณาตรวจสอบการเชื่อมต่ออินเทอร์เน็ต',
       );
     } catch (e) {
-// print('API Error: $e');
+      // print('API Error: $e');
       rethrow;
     }
   }
 
   Future<String> _generateGuestToken() async {
     try {
-// print('Generating guest token...');
+      // print('Generating guest token...');
       final response = await http
           .post(
             Uri.parse(ApiConfig.guestTokens),
@@ -569,7 +571,7 @@ class _WishesPageState extends State<WishesPage> {
           )
           .timeout(Duration(seconds: 10));
 
-// print('Token generation response status: ${response.statusCode}');
+      // print('Token generation response status: ${response.statusCode}');
 
       if (response.statusCode == 200) {
         final data = json.decode(response.body);
@@ -592,14 +594,14 @@ class _WishesPageState extends State<WishesPage> {
             if (parseError is TimeNotReachedException) {
               rethrow;
             }
-// print('Error parsing error response: $parseError');
+            // print('Error parsing error response: $parseError');
           }
         }
 
         throw Exception('ไม่สามารถสร้าง token ได้: ${response.statusCode}');
       }
     } catch (e) {
-// print('Error generating token: $e');
+      // print('Error generating token: $e');
       rethrow;
     }
   }
@@ -963,7 +965,7 @@ class _WishesPageState extends State<WishesPage> {
         }
       }
     } catch (e) {
-// print('Error formatting date: $e');
+      // print('Error formatting date: $e');
     }
 
     return '26 กุมภาพันธ์ 2026'; // Default fallback
@@ -975,7 +977,7 @@ class _WishesPageState extends State<WishesPage> {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getString(tokenKey);
     } catch (e) {
-// print('Error getting stored token: $e');
+      // print('Error getting stored token: $e');
       return null;
     }
   }
@@ -985,7 +987,7 @@ class _WishesPageState extends State<WishesPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.setString(tokenKey, token);
     } catch (e) {
-// print('Error saving token: $e');
+      // print('Error saving token: $e');
     }
   }
 
@@ -994,7 +996,7 @@ class _WishesPageState extends State<WishesPage> {
       final prefs = await SharedPreferences.getInstance();
       return prefs.getString(usernameKey);
     } catch (e) {
-// print('Error getting stored username: $e');
+      // print('Error getting stored username: $e');
       return null;
     }
   }
@@ -1004,9 +1006,9 @@ class _WishesPageState extends State<WishesPage> {
       final prefs = await SharedPreferences.getInstance();
       await prefs.remove(tokenKey);
       await prefs.remove(usernameKey);
-// print('Token cleared from storage');
+      // print('Token cleared from storage');
     } catch (e) {
-// print('Error clearing token: $e');
+      // print('Error clearing token: $e');
     }
   }
 
