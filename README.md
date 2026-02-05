@@ -1,155 +1,164 @@
-# 💒 Electronic Wedding Card App
+# 💒 Electronic Wedding Card App | แอพการ์ดแต่งงานดิจิทัล
 
 A beautiful, interactive wedding invitation mobile application built with Flutter. This app provides a complete digital wedding experience with stunning animations, guest interactions, and modern design.
 
-## ✨ Features
+แอปพลิเคชันการ์ดเชิญงานแต่งงานแบบโต้ตอบที่สวยงาม สร้างด้วย Flutter แอปนี้ให้ประสบการณ์งานแต่งงานดิจิทัลที่สมบูรณ์ พร้อมกราฟิกแอนิเมชันที่น่าทึ่ง การโต้ตอบกับแขก และดีไซน์ที่ทันสมัย
 
-### 🎴 3D Flip Card Animation
+## ✨ Features | ฟีเจอร์
 
-- Interactive wedding invitation with smooth 3D flip animation
-- Elegant card design with bride and groom details
-- Touch-responsive flip interaction
+### 🎴 3D Flip Card Animation | แอนิเมชันการ์ดพลิก 3 มิติ
 
-### ⏰ Wedding Countdown
+- Interactive wedding invitation with smooth 3D flip animation | การ์ดเชิญงานแต่งงานแบบโต้ตอบพร้อมแอนิเมชันพลิก 3D ที่นุ่มนวล
+- Elegant card design with bride and groom details | ดีไซน์การ์ดสวยงามพร้อมรายละเอียดเจ้าบ่าวเจ้าสาว
+- Touch-responsive flip interaction | การพลิกที่ตอบสนองการสัมผัส
 
-- Real-time countdown to the wedding date
-- Beautiful animated display showing days, hours, minutes, and seconds
+### ⏰ Wedding Countdown | นับถอยหลังงานแต่งงาน
 
-### 🗓️ Schedule Page
+- Real-time countdown to the wedding date | นับถอยหลังแบบเรียลไทม์ถึงวันแต่งงาน
+- Beautiful animated display showing days, hours, minutes, and seconds | การแสดงผลแบบแอนิเมชันสวยงามที่แสดงวัน ชั่วโมง นาที และวินาที
 
-- Complete wedding day timeline
-- Ceremony and reception details
-- Venue information and timing
+### 🗓️ Schedule Page | หน้าตารางเวลา
 
-### 📸 Photo Gallery
+- Complete wedding day timeline | ไทม์ไลน์วันแต่งงานที่สมบูรณ์
+- Ceremony and reception details | รายละเอียดพิธีและงานเลี้ยง
+- Venue information and timing | ข้อมูลสถานที่และเวลา
 
-- Beautiful gallery showcase
-- Full-screen photo viewer with smooth transitions
-- Responsive grid layout
+### 📸 Photo Gallery | แกลลอรี่รูปภาพ
 
-### 💝 Wishes & Blessings
+- Beautiful gallery showcase | แกลลอรี่แสดงผลที่สวยงาม
+- Full-screen photo viewer with smooth transitions | โปรแกรมดูรูปเต็มจอพร้อมการเปลี่ยนที่นุ่มนวล
+- Responsive grid layout | เลย์เอาต์ตารางที่ตอบสนอง
 
-- Interactive wishes submission form
-- Photo upload functionality for guests
-- Real-time API integration for storing wishes
-- Loading and success feedback
+### 💝 Wishes & Blessings | คำอวยพรและความปรารถนาดี
 
-### 🌻 Thank You Page
+- Interactive wishes submission form | ฟอร์มส่งคำอวยพรแบบโต้ตอบ
+- Photo upload functionality for guests | ฟังก์ชันอัปโหลดรูปภาพสำหรับแขก
+- Real-time API integration for storing wishes | การเชื่อมต่อ API แบบเรียลไทม์สำหรับเก็บคำอวยพร
+- Loading and success feedback | ข้อความตอบกลับขณะโหลดและเมื่อสำเร็จ
 
-- Display all submitted wishes from guests
-- Beautiful sunflower-themed design
-- Template color customization
-- Image proxy for CORS-free image loading
+### 🌻 Thank You Page | หน้าขอบคุณ
 
-### 🎨 Template Colors
+- Display all submitted wishes from guests | แสดงคำอวยพรทั้งหมดจากแขก
+- Beautiful sunflower-themed design | ดีไซน์ธีมดอกทานตะวันที่สวยงาม
+- Template color customization | การปรับแต่งสีตามเทมเพลต
+- Image proxy for CORS-free image loading | Image proxy สำหรับโหลดรูปภาพโดยไม่มีปัญหา CORS
 
-- Dynamic color theming system
-- Customizable color schemes
-- Consistent design across all pages
+### 🎨 Template Colors | สีเทมเพลต
 
-### 🚀 Splash Screen
+- Dynamic color theming system | ระบบธีมสีแบบไดนามิก
+- Customizable color schemes | รูปแบบสีที่ปรับแต่งได้
+- Consistent design across all pages | ดีไซน์ที่สอดคล้องกันทั่วทุกหน้า
 
-- Professional app startup experience
-- Animated mini-logo with fade effects
-- Smooth white fade transition to main app
+### 🚀 Splash Screen | หน้าจอเปิดแอป
 
-## 🛠️ Technology Stack
+- Professional app startup experience | ประสบการณ์การเปิดแอปอย่างมืออาชีพ
+- Animated mini-logo with fade effects | มินิโลโก้แอนิเมชันพร้อมเอฟเฟกต์เฟด
+- Smooth white fade transition to main app | การเปลี่ยนหน้าแบบ white fade ที่นุ่มนวลสู่แอปหลัก
 
-- **Frontend**: Flutter (Dart)
-- **UI/UX**: Material Design with custom animations
-- **State Management**: StatefulWidget with AnimationController
-- **HTTP Requests**: http package for API integration
-- **Local Storage**: SharedPreferences for token persistence
-- **Image Handling**: image_picker for photo uploads
-- **Cross-Platform**: iOS, Android, Web support
+## 🛠️ Technology Stack | เทคโนโลยีที่ใช้
 
-## 📱 Screenshots & Demo
+- **Frontend**: Flutter (Dart) | ส่วนหน้า: Flutter (Dart)
+- **UI/UX**: Material Design with custom animations | ส่วนติดต่อผู้ใช้: Material Design พร้อมแอนิเมชันกำหนดเอง
+- **State Management**: StatefulWidget with AnimationController | การจัดการสถานะ: StatefulWidget พร้อม AnimationController
+- **HTTP Requests**: http package for API integration | การร้องขอ HTTP: package http สำหรับเชื่อมต่อ API
+- **Local Storage**: SharedPreferences for token persistence | การจัดเก็บข้อมูลท้องถิน: SharedPreferences สำหรับเก็บ token
+- **Image Handling**: image_picker for photo uploads | การจัดการรูปภาพ: image_picker สำหรับอัปโหลดรูป
+- **Cross-Platform**: iOS, Android, Web support | รองรับหลากหลายแพลตฟอร์ม: iOS, Android, Web
+
+## 📱 Screenshots & Demo | ภาพหน้าจอและตัวอย่าง
 
 The app features a modern, elegant design with:
+แอปมีดีไซน์ที่ทันสมัยและสวยงามพร้อม:
 
-- Smooth 3D animations and transitions
-- Responsive design for all screen sizes
-- Professional loading states and feedback
-- Intuitive navigation between pages
+- Smooth 3D animations and transitions | แอนิเมชัน 3D และการเปลี่ยนที่นุ่มนวล
+- Responsive design for all screen sizes | ดีไซน์ที่ตอบสนองสำหรับทุกขนาดหน้าจอ
+- Professional loading states and feedback | สถานะการโหลดและการตอบกลับอย่างมืออาชีพ
+- Intuitive navigation between pages | การนำทางระหว่างหน้าที่ใช้งานง่าย
 
-## 🚀 Getting Started
+## 🚀 Getting Started | เริ่มต้นใช้งาน
 
-### Prerequisites
+### Prerequisites | ข้อกำหนดเบื้องต้น
 
 - Flutter SDK (^3.9.2)
 - Dart SDK
-- Android Studio / Xcode (for mobile development)
-- Web browser (for web development)
+- Android Studio / Xcode (for mobile development) | (สำหรับพัฒนามือถือ)
+- Web browser (for web development) | เว็บเบราว์เซอร์ (สำหรับพัฒนาเว็บ)
 
-### Installation
+### Installation | การติดตั้ง
 
-1. **Clone the repository**
+1. **Clone the repository | โคลนที่เก็บโค้ด**
 
     ```bash
     git clone <repository-url>
     cd electronic_card_app
     ```
 
-2. **Install dependencies**
+2. **Install dependencies | ติดตั้ง dependencies**
 
     ```bash
     flutter pub get
     ```
 
-3. **Add required assets**
-    - Place `mini-logo.png` in `assets/images/`
-    - Add gallery images in `assets/images/gallery/`
-    - Update `pubspec.yaml` if adding new assets
+3. **Add required assets | เพิ่ม assets ที่จำเป็น**
+    - Place `mini-logo.png` in `assets/images/` | วาง `mini-logo.png` ไว้ใน `assets/images/`
+    - Add gallery images in `assets/images/gallery/` | เพิ่มรูปแกลลอรี่ใน `assets/images/gallery/`
+    - Update `pubspec.yaml` if adding new assets | อัปเดต `pubspec.yaml` หากเพิ่ม assets ใหม่
 
-4. **Run the application**
+4. **Run the application | รันแอปพลิเคชัน**
 
     ```bash
-    # For debug mode
+    # For debug mode | สำหรับโหมดแก้ไขข้อผิดพลาด
     flutter run
 
-    # For web
+    # For web | สำหรับเว็บ
     flutter run -d chrome
 
-    # For specific device
+    # For specific device | สำหรับอุปกรณ์เฉพาะ
     flutter run -d <device-id>
     ```
 
-## 📁 Project Structure
+## 📁 Project Structure | โครงสร้างโปรเจกต์
 
 ```
 lib/
-├── main.dart                 # App entry point & main wedding card
-├── splash_screen.dart        # App splash screen with animations
-├── schedule.dart            # Wedding schedule page
-├── gallery.dart             # Photo gallery page
-├── wishes.dart              # Wishes submission form
-└── thank_you_page.dart      # Thank you & wishes display page
+├── main.dart                 # App entry point & main wedding card | จุดเข้าแอปและการ์ดแต่งงานหลัก
+├── splash_screen.dart        # App splash screen with animations | หน้าจอเปิดแอปพร้อมแอนิเมชัน
+├── schedule.dart            # Wedding schedule page | หน้าตารางเวลางานแต่งงาน
+├── gallery.dart             # Photo gallery page | หน้าแกลลอรี่รูปภาพ
+├── wishes.dart              # Wishes submission form | ฟอร์มส่งคำอวยพร
+├── thank_you_page.dart      # Thank you & wishes display page | หน้าขอบคุณและแสดงคำอวยพร
+└── config/
+    └── api_config.dart      # Global API configuration | การตั้งค่า API แบบ Global
 
 assets/
 ├── images/
-│   ├── mini-logo.png        # App logo for splash screen
-│   └── gallery/             # Gallery photos
-└── icons/                   # App icons
+│   ├── mini-logo.png        # App logo for splash screen | โลโก้แอปสำหรับหน้าจอเปิดแอป
+│   └── gallery/             # Gallery photos | รูปภาพแกลลอรี่
+└── icons/                   # App icons | ไอคอนแอป
 ```
 
-## 🔧 Configuration
+## 🔧 Configuration | การตั้งค่า
 
-### API Integration
+### API Integration | การเชื่อมต่อ API
 
-The app integrates with a REST API for wishes submission. Configure the API endpoints in the wishes page:
+The app integrates with a REST API for wishes submission. Configure the API endpoints in the API config:
+แอปเชื่อมต่อกับ REST API สำหรับการส่งคำอวยพร ตั้งค่า API endpoints ในไฟล์ config:
 
 ```dart
-// Update API URLs in wishes.dart and thank_you_page.dart
-const String apiUrl = 'your-api-endpoint';
-const String imageProxyUrl = 'your-image-proxy-endpoint';
+// Update API URLs in lib/config/api_config.dart
+// อัปเดต API URLs ใน lib/config/api_config.dart
+class ApiConfig {
+  static const String baseUrl = 'your-api-endpoint';
+}
 ```
 
-### Template Colors
+### Template Colors | สีเทมเพลต
 
 Customize the app colors by modifying the template color system in `thank_you_page.dart`:
+ปรับแต่งสีของแอปโดยการแก้ไขระบบสีเทมเพลตใน `thank_you_page.dart`:
 
 ```dart
-// Example template colors
+// Example template colors | ตัวอย่างสีเทมเพลต
 final templateColors = {
   'primary': '#E8F4F0',
   'secondary': '#4A7C59',
@@ -157,16 +166,18 @@ final templateColors = {
 };
 ```
 
-## 🎯 Key Features Implementation
+## 🎯 Key Features Implementation | การใช้งานฟีเจอร์หลัก
 
-- **3D Flip Animation**: Custom AnimationController with Transform.rotate3D
-- **API Integration**: HTTP requests with multipart file upload
-- **Image Handling**: Cross-platform image picker and display
-- **Responsive Design**: MediaQuery-based responsive layouts
-- **State Management**: Efficient StatefulWidget architecture
-- **Error Handling**: Comprehensive error states and user feedback
+## 🎯 Key Features Implementation | การใช้งานฟีเจอร์หลัก
 
-## 🚀 Build & Deploy
+- **3D Flip Animation**: Custom AnimationController with Transform.rotate3D | แอนิเมชันพลิก 3D: AnimationController และ Transform.rotate3D กำหนดเอง
+- **API Integration**: HTTP requests with multipart file upload | การเชื่อมต่อ API: คำขอ HTTP พร้อมการอัปโหลดไฟล์ multipart
+- **Image Handling**: Cross-platform image picker and display | การจัดการรูปภาพ: ตัวเลือกและแสดงผลรูปข้ามแพลตฟอร์ม
+- **Responsive Design**: MediaQuery-based responsive layouts | ดีไซน์ที่ตอบสนอง: เลย์เอาต์ที่ใช้ MediaQuery
+- **State Management**: Efficient StatefulWidget architecture | การจัดการสถานะ: สถาปัตยกรรม StatefulWidget ที่มีประสิทธิภาพ
+- **Error Handling**: Comprehensive error states and user feedback | การจัดการข้อผิดพลาด: สถานะข้อผิดพลาดและการตอบกลับผู้ใช้อย่างครบถ้วน
+
+## 🚀 Build & Deploy | การ Build และ Deploy
 
 ### Android
 
@@ -188,28 +199,29 @@ flutter build ios --release
 flutter build web --release
 ```
 
-## 🤝 Contributing
+## 🤝 Contributing | การร่วมพัฒนา
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+1. Fork the repository | Fork repository
+2. Create a feature branch (`git checkout -b feature/amazing-feature`) | สร้าง feature branch
+3. Commit your changes (`git commit -m 'Add some amazing feature'`) | Commit การเปลี่ยนแปลง
+4. Push to the branch (`git push origin feature/amazing-feature`) | Push ไปที่ branch
+5. Open a Pull Request | เปิด Pull Request
 
-## 📄 License
+## 📄 License | สิทธิ์การใช้งาน
 
 This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+โปรเจกต์นี้อยู่ภายใต้สิทธิ์ MIT License - ดูรายละเอียดในไฟล์ [LICENSE](LICENSE)
 
-## 👥 Authors
+## 👥 Authors | ผู้เขียน
 
-- **Developer** - Wedding Card App Team
+- **Developer** - Wedding Card App Team | นักพัฒนา - ทีมแอปการ์ดแต่งงาน
 
-## 🙏 Acknowledgments
+## 🙏 Acknowledgments | กิตติกรรมประกาศ
 
-- Flutter team for the amazing framework
-- Material Design for UI inspiration
-- Community packages that made this project possible
+- Flutter team for the amazing framework | ทีม Flutter สำหรับเฟรมเวิร์กที่ยอดเยี่ยม
+- Material Design for UI inspiration | Material Design สำหรับแรงบันดาลใจ UI
+- Community packages that made this project possible | packages จากชุมชนที่ทำให้โปรเจกต์นี้เป็นไปได้
 
 ---
 
-Built with ❤️ using Flutter
+Built with ❤️ using Flutter | สร้างด้วย ❤️ โดยใช้ Flutter
