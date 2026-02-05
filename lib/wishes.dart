@@ -2,6 +2,7 @@ import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
 
+import 'package:electronic_card_app/font_styles.dart';
 import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
@@ -17,6 +18,12 @@ const Color kPrimaryColor = Color(0xFF7E8B78);
 // Token storage keys
 const String TOKEN_KEY = 'guest_token';
 const String USERNAME_KEY = 'guest_username';
+
+// Custom exception for time not reached error
+class TimeNotReachedException implements Exception {
+  final String message;
+  TimeNotReachedException(this.message);
+}
 
 class WishesPage extends StatefulWidget {
   const WishesPage({super.key});
@@ -502,6 +509,23 @@ class _WishesPageState extends State<WishesPage> {
       return;
     }
 
+    // Check if it's the allowed date (February 26, 2026)
+    final now = DateTime.now();
+    final allowedDate = DateTime(2026, 2, 26);
+
+    if (now.year == allowedDate.year &&
+        now.month == allowedDate.month &&
+        now.day == allowedDate.day) {
+      // Show preview dialog for confirmation
+      _showPreviewDialog();
+    } else {
+      // For testing or if it's not the right date, proceed directly
+      _showPreviewDialog();
+      // await _submitWish();
+    }
+  }
+
+  Future<void> _submitWish() async {
     // Show loading
     setState(() {
       _isSubmitting = true;
@@ -510,27 +534,25 @@ class _WishesPageState extends State<WishesPage> {
     try {
       await _submitWishToAPI();
 
-      // Hide loading first
-      setState(() {
-        _isSubmitting = false;
-      });
-
-      // Clear the form
-      _clearForm();
-
       // Show success popup with delay (like the Angular code)
       await Future.delayed(Duration(milliseconds: 300));
       setState(() {
         _showSuccess = true;
       });
     } catch (e) {
-      // Hide loading and show error
+      // Don't show error snackbar for TimeNotReachedException
+      if (e is! TimeNotReachedException) {
+        _showErrorSnackBar(
+          'เกิดข้อผิดพลาดในการส่งคำอวยพร กรุณาลองใหม่อีกครั้ง',
+        );
+      }
+      print('Error submitting wish: $e');
+    } finally {
+      // Always clear form and hide loading after submit attempt
       setState(() {
         _isSubmitting = false;
       });
-
-      _showErrorSnackBar('เกิดข้อผิดพลาดในการส่งคำอวยพร กรุณาลองใหม่อีกครั้ง');
-      print('Error submitting wish: $e');
+      _clearForm();
     }
   }
 
@@ -671,12 +693,263 @@ class _WishesPageState extends State<WishesPage> {
         return token;
       } else {
         print('Token generation failed: ${response.body}');
+
+        // Check if it's the specific "not time yet" error
+        if (response.statusCode == 403) {
+          try {
+            final errorData = json.decode(response.body);
+            if (errorData['error'] == 'Token Request Forbidden' &&
+                errorData['message']?.contains('February 26, 2026') == true) {
+              _showTimeNotReachedDialog(errorData);
+              throw TimeNotReachedException('Time not reached');
+            }
+          } catch (parseError) {
+            if (parseError is TimeNotReachedException) {
+              rethrow;
+            }
+            print('Error parsing error response: $parseError');
+          }
+        }
+
         throw Exception('ไม่สามารถสร้าง token ได้: ${response.statusCode}');
       }
     } catch (e) {
       print('Error generating token: $e');
       rethrow;
     }
+  }
+
+  void _showPreviewDialog() {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          backgroundColor: Colors.white,
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.preview, color: kPrimaryColor, size: 24),
+              const SizedBox(width: 8),
+              Text(
+                'ยืนยันการส่งคำอวยพร',
+                style: AppFonts.kanit(
+                  color: kPrimaryColor,
+                  fontSize: 20,
+                  fontWeight: AppFonts.light,
+                ),
+              ),
+            ],
+          ),
+          content: SingleChildScrollView(
+            child: Column(
+              mainAxisSize: MainAxisSize.min,
+              crossAxisAlignment: CrossAxisAlignment.start,
+              children: [
+                Text(
+                  'กรุณาตรวจสอบข้อมูลก่อนส่ง',
+                  style: AppFonts.kanit(
+                    fontSize: 16,
+                    color: Colors.grey[700],
+                    fontWeight: AppFonts.light,
+                  ),
+                ),
+                const SizedBox(height: 16),
+
+                // Name preview
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ชื่อผู้ส่ง',
+                        style: AppFonts.kanit(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                          fontWeight: AppFonts.light,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _nameController.text.trim(),
+                        style: AppFonts.kanit(
+                          fontSize: 14,
+                          color: Colors.grey[800],
+                          fontWeight: AppFonts.light,
+                        ),
+                      ),
+                    ],
+                  ),
+                ),
+
+                const SizedBox(height: 12),
+
+                // Message preview
+                Container(
+                  width: double.infinity,
+                  padding: const EdgeInsets.all(12),
+                  decoration: BoxDecoration(
+                    color: Colors.grey[50],
+                    borderRadius: BorderRadius.circular(8),
+                    border: Border.all(color: Colors.grey[200]!),
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      Text(
+                        'ข้อความอวยพร',
+                        style: AppFonts.kanit(
+                          fontSize: 16,
+                          color: Colors.grey[600],
+                          fontWeight: AppFonts.light,
+                        ),
+                      ),
+                      const SizedBox(height: 4),
+                      Text(
+                        _wishController.text.trim(),
+                        style: AppFonts.kanit(
+                          fontSize: 14,
+                          color: Colors.grey[800],
+                          height: 1.4,
+                          fontWeight: AppFonts.light,
+                        ),
+                        maxLines: 6,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    ],
+                  ),
+                ),
+
+                // Image preview
+                if ((kIsWeb && _selectedImagesData.isNotEmpty) ||
+                    (!kIsWeb && _selectedImages.isNotEmpty))
+                  Column(
+                    children: [
+                      const SizedBox(height: 12),
+                      Container(
+                        padding: const EdgeInsets.all(12),
+                        decoration: BoxDecoration(
+                          color: Colors.grey[50],
+                          borderRadius: BorderRadius.circular(8),
+                          border: Border.all(color: Colors.grey[200]!),
+                        ),
+                        child: Column(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            Text(
+                              'รูปภาพ',
+                              style: AppFonts.kanit(
+                                fontSize: 18,
+                                color: Colors.grey[600],
+                                fontWeight: AppFonts.light,
+                              ),
+                            ),
+                            const SizedBox(height: 8),
+                            Container(
+                              width: 80,
+                              height: 80,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(8),
+                                border: Border.all(
+                                  color: kPrimaryColor.withOpacity(0.2),
+                                ),
+                              ),
+                              child: ClipRRect(
+                                borderRadius: BorderRadius.circular(7),
+                                child: kIsWeb
+                                    ? Image.memory(
+                                        _selectedImagesData.first,
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.cover,
+                                      )
+                                    : Image.file(
+                                        _selectedImages.first,
+                                        width: 80,
+                                        height: 80,
+                                        fit: BoxFit.cover,
+                                      ),
+                              ),
+                            ),
+                          ],
+                        ),
+                      ),
+                    ],
+                  ),
+
+                const SizedBox(height: 16),
+                Text(
+                  'คำอวยพรของคุณจะถูกส่งไปให้บ่าวสาว',
+                  style: AppFonts.kanit(
+                    fontSize: 14,
+                    color: Colors.grey[600],
+                    fontStyle: FontStyle.italic,
+                    fontWeight: AppFonts.light,
+                  ),
+                ),
+              ],
+            ),
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 20,
+                  vertical: 12,
+                ),
+              ),
+              child: Text(
+                'ยกเลิก',
+                style: TextStyle(
+                  fontFamily: 'Kanit',
+                  color: Colors.grey[600],
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+            TextButton(
+              onPressed: () async {
+                Navigator.of(context).pop();
+                await _submitWish();
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                backgroundColor: kPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'ส่งคำอวยพร',
+                style: TextStyle(
+                  fontFamily: 'Kanit',
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w300,
+                ),
+              ),
+            ),
+          ],
+          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        );
+      },
+    );
   }
 
   void _showErrorSnackBar(String message) {
@@ -696,6 +969,113 @@ class _WishesPageState extends State<WishesPage> {
         backgroundColor: kPrimaryColor,
         duration: Duration(seconds: 2),
       ),
+    );
+  }
+
+  void _showTimeNotReachedDialog(Map<String, dynamic> errorData) {
+    showDialog(
+      context: context,
+      barrierDismissible: false,
+      builder: (BuildContext context) {
+        return AlertDialog(
+          shape: RoundedRectangleBorder(
+            borderRadius: BorderRadius.circular(15),
+          ),
+          title: Row(
+            children: [
+              Icon(Icons.access_time, color: kPrimaryColor, size: 24),
+              const SizedBox(width: 8),
+              Text(
+                'ยังไม่ถึงเวลา',
+                style: TextStyle(
+                  color: kPrimaryColor,
+                  fontSize: 20,
+                  fontWeight: FontWeight.w600,
+                ),
+              ),
+            ],
+          ),
+          content: Column(
+            mainAxisSize: MainAxisSize.min,
+            crossAxisAlignment: CrossAxisAlignment.start,
+            children: [
+              Text(
+                'การเขียนคำอวยพรจะเปิดให้ใช้งานในวันงานเท่านั้น',
+                style: TextStyle(
+                  fontSize: 16,
+                  color: Colors.grey[700],
+                  height: 1.4,
+                ),
+              ),
+              const SizedBox(height: 16),
+              Container(
+                padding: const EdgeInsets.all(12),
+                decoration: BoxDecoration(
+                  color: kPrimaryColor.withOpacity(0.1),
+                  borderRadius: BorderRadius.circular(8),
+                  border: Border.all(
+                    color: kPrimaryColor.withOpacity(0.3),
+                    width: 1,
+                  ),
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    Text(
+                      '📅 วันที่เปิดใช้งาน: ${errorData['allowedDate'] ?? '26 กุมภาพันธ์ 2026'}',
+                      style: TextStyle(
+                        fontSize: 14,
+                        color: kPrimaryColor,
+                        fontWeight: FontWeight.w500,
+                      ),
+                    ),
+                    const SizedBox(height: 4),
+                    Text(
+                      '📅 วันที่ปัจจุบัน: ${errorData['currentDate'] ?? '5 กุมภาพันธ์ 2026'}',
+                      style: TextStyle(fontSize: 14, color: Colors.grey[600]),
+                    ),
+                  ],
+                ),
+              ),
+              const SizedBox(height: 16),
+              Text(
+                'กรุณากลับมาใหม่ในวันงานเพื่อส่งคำอวยพรให้บ่าวสาว! 💕',
+                style: TextStyle(
+                  fontSize: 14,
+                  color: Colors.grey[600],
+                  fontStyle: FontStyle.italic,
+                ),
+              ),
+            ],
+          ),
+          actions: [
+            TextButton(
+              onPressed: () {
+                Navigator.of(context).pop();
+              },
+              style: TextButton.styleFrom(
+                padding: const EdgeInsets.symmetric(
+                  horizontal: 24,
+                  vertical: 12,
+                ),
+                backgroundColor: kPrimaryColor,
+                shape: RoundedRectangleBorder(
+                  borderRadius: BorderRadius.circular(8),
+                ),
+              ),
+              child: Text(
+                'เข้าใจแล้ว',
+                style: TextStyle(
+                  color: Colors.white,
+                  fontSize: 16,
+                  fontWeight: FontWeight.w500,
+                ),
+              ),
+            ),
+          ],
+          actionsPadding: const EdgeInsets.fromLTRB(24, 0, 24, 24),
+        );
+      },
     );
   }
 

@@ -3,6 +3,7 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 import 'package:flutter_dotenv/flutter_dotenv.dart';
 
+import 'font_styles.dart';
 import 'gallery.dart';
 import 'schedule.dart';
 import 'splash_screen.dart';
@@ -26,7 +27,69 @@ class MyApp extends StatelessWidget {
       title: 'Wedding Invitation',
       theme: ThemeData(
         primarySwatch: Colors.grey,
-        fontFamily: 'Times New Roman',
+        fontFamily: 'Kanit', // Use Kanit as default
+        textTheme: TextTheme(
+          displayLarge: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          displayMedium: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          displaySmall: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          headlineLarge: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          headlineMedium: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          headlineSmall: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          titleLarge: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          titleMedium: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          titleSmall: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          bodyLarge: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          bodyMedium: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          bodySmall: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          labelLarge: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          labelMedium: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+          labelSmall: TextStyle(
+            fontFamily: 'Kanit',
+            fontWeight: FontWeight.w300,
+          ),
+        ),
       ),
       home: const SplashScreen(),
       debugShowCheckedModeBanner: false,
@@ -247,10 +310,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
             const SizedBox(height: 25),
 
-            // Invitation text
+            // Invitation text - using AppFonts
             Text(
               'invite you to celebrate',
-              style: TextStyle(
+              style: AppFonts.crimsonPro(
                 fontSize: 18,
                 color: kPrimaryColor,
                 fontStyle: FontStyle.italic,
@@ -263,7 +326,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
             Text(
               'our wedding',
-              style: TextStyle(
+              style: AppFonts.crimsonPro(
                 fontSize: 18,
                 color: kPrimaryColor,
                 fontStyle: FontStyle.italic,
@@ -280,33 +343,39 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               children: [
                 Text(
                   '26',
-                  style: TextStyle(
+                  style: AppFonts.glacialIndifference(
                     fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: AppFonts.light,
                     color: kPrimaryColor,
                   ),
                 ),
                 Text(
                   '  |  ',
-                  style: TextStyle(fontSize: 20, color: kPrimaryColor),
+                  style: AppFonts.glacialIndifference(
+                    fontSize: 20,
+                    color: kPrimaryColor,
+                  ),
                 ),
                 Text(
                   '02',
-                  style: TextStyle(
+                  style: AppFonts.glacialIndifference(
                     fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: AppFonts.light,
                     color: kPrimaryColor,
                   ),
                 ),
                 Text(
                   '  |  ',
-                  style: TextStyle(fontSize: 20, color: kPrimaryColor),
+                  style: AppFonts.glacialIndifference(
+                    fontSize: 20,
+                    color: kPrimaryColor,
+                  ),
                 ),
                 Text(
                   '2026',
-                  style: TextStyle(
+                  style: AppFonts.glacialIndifference(
                     fontSize: 24,
-                    fontWeight: FontWeight.w300,
+                    fontWeight: AppFonts.light,
                     color: kPrimaryColor,
                   ),
                 ),
@@ -318,11 +387,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             // Message
             Text(
               'WE LOOK FORWARD TO YOUR PRESENCE',
-              style: TextStyle(
+              style: AppFonts.season(
                 fontSize: 12,
                 color: kPrimaryColor,
                 letterSpacing: 2.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: AppFonts.regular,
               ),
               textAlign: TextAlign.center,
             ),
@@ -331,11 +400,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
 
             Text(
               'ON OUR SPECIAL DAY.',
-              style: TextStyle(
+              style: AppFonts.season(
                 fontSize: 12,
                 color: kPrimaryColor,
                 letterSpacing: 2.0,
-                fontWeight: FontWeight.w400,
+                fontWeight: AppFonts.regular,
               ),
               textAlign: TextAlign.center,
             ),
@@ -374,77 +443,142 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
             // ชื่อพ่อแม่
-            Row(
-              mainAxisAlignment: MainAxisAlignment.spaceEvenly,
-              crossAxisAlignment: CrossAxisAlignment.center,
-              children: [
-                // Left column
-                Expanded(
-                  child: Column(
+            screenWidth < 400
+                ? Column(
                     children: [
+                      // Left side parents
+                      Column(
+                        children: [
+                          Text(
+                            'นายมนตรี กรวิริยะกิจ',
+                            style: AppFonts.kanit(
+                              fontSize: 16,
+                              color: kPrimaryColor,
+                              fontWeight: AppFonts.medium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'นางสุรพงษ์ กรวิริยะกิจ',
+                            style: AppFonts.kanit(
+                              fontSize: 16,
+                              color: kPrimaryColor,
+                              fontWeight: AppFonts.medium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                      const SizedBox(height: 10),
+                      // Center "และ"
                       Text(
-                        'นายมนตรี กรวิริยะกิจ',
-                        style: TextStyle(
-                          fontSize: 16,
+                        'และ',
+                        style: AppFonts.kanit(
+                          fontSize: 14,
                           color: kPrimaryColor,
-                          fontWeight: FontWeight.w500,
                         ),
                         textAlign: TextAlign.center,
                       ),
-                      Text(
-                        'นางสุรพงษ์ กรวิริยะกิจ',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.w500,
+                      const SizedBox(height: 10),
+                      // Right side parents
+                      Column(
+                        children: [
+                          Text(
+                            'นายเจริญ บริบูรณ์',
+                            style: AppFonts.kanit(
+                              fontSize: 16,
+                              color: kPrimaryColor,
+                              fontWeight: AppFonts.medium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                          Text(
+                            'นางญัฐธยาน์ บริบูรณ์',
+                            style: AppFonts.kanit(
+                              fontSize: 16,
+                              color: kPrimaryColor,
+                              fontWeight: AppFonts.medium,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ],
+                      ),
+                    ],
+                  )
+                : Row(
+                    mainAxisAlignment: MainAxisAlignment.spaceEvenly,
+                    crossAxisAlignment: CrossAxisAlignment.center,
+                    children: [
+                      // Left column
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              'นายมนตรี กรวิริยะกิจ',
+                              style: AppFonts.kanit(
+                                fontSize: 16,
+                                color: kPrimaryColor,
+                                fontWeight: AppFonts.medium,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'นางสุรพงษ์ กรวิริยะกิจ',
+                              style: AppFonts.kanit(
+                                fontSize: 16,
+                                color: kPrimaryColor,
+                                fontWeight: AppFonts.medium,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
                         ),
-                        textAlign: TextAlign.center,
+                      ),
+                      // Center "และ"
+                      Padding(
+                        padding: const EdgeInsets.symmetric(horizontal: 10),
+                        child: Text(
+                          'และ',
+                          style: AppFonts.kanit(
+                            fontSize: 14,
+                            color: kPrimaryColor,
+                          ),
+                          textAlign: TextAlign.center,
+                        ),
+                      ),
+                      // Right column
+                      Expanded(
+                        child: Column(
+                          children: [
+                            Text(
+                              'นายเจริญ บริบูรณ์',
+                              style: AppFonts.kanit(
+                                fontSize: 16,
+                                color: kPrimaryColor,
+                                fontWeight: AppFonts.medium,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                            Text(
+                              'นางญัฐธยาน์ บริบูรณ์',
+                              style: AppFonts.kanit(
+                                fontSize: 16,
+                                color: kPrimaryColor,
+                                fontWeight: AppFonts.medium,
+                              ),
+                              textAlign: TextAlign.center,
+                            ),
+                          ],
+                        ),
                       ),
                     ],
                   ),
-                ),
-                // Center "และ"
-                Padding(
-                  padding: const EdgeInsets.symmetric(horizontal: 10),
-                  child: Text(
-                    'และ',
-                    style: TextStyle(fontSize: 14, color: kPrimaryColor),
-                    textAlign: TextAlign.center,
-                  ),
-                ),
-                // Right column
-                Expanded(
-                  child: Column(
-                    children: [
-                      Text(
-                        'นายเจริญ บริบูรณ์',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                      Text(
-                        'นางญัฐธยาน์ บริบูรณ์',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                        textAlign: TextAlign.center,
-                      ),
-                    ],
-                  ),
-                ),
-              ],
-            ),
             const SizedBox(height: 20),
 
             // ข้อความเชิญ
             Text(
               'มีความยินดีขอเรียนเชิญเพื่อมาเป็นเกียรติในพิธีมงคงสมรสระหว่าง',
-              style: TextStyle(fontSize: 14, color: kPrimaryColor),
+              style: AppFonts.kanit(fontSize: 14, color: kPrimaryColor),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 15),
@@ -481,19 +615,19 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             // ชื่อคู่บ่าวสาว
             Text(
               'นางสาวอาทิตยา กรวิริยะกิจ',
-              style: TextStyle(
+              style: AppFonts.kanit(
                 fontSize: 18,
                 color: kPrimaryColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: AppFonts.bold,
               ),
               textAlign: TextAlign.center,
             ),
             Text(
               'นายสรรเพชญ บริบูรณ์',
-              style: TextStyle(
+              style: AppFonts.kanit(
                 fontSize: 18,
                 color: kPrimaryColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: AppFonts.bold,
               ),
               textAlign: TextAlign.center,
             ),
@@ -502,16 +636,20 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             // วันที่
             Text(
               '26.02.2026',
-              style: TextStyle(
+              style: AppFonts.glacialIndifference(
                 fontSize: 28,
                 color: kPrimaryColor,
-                fontWeight: FontWeight.bold,
+                fontWeight: AppFonts.regular,
               ),
               textAlign: TextAlign.center,
             ),
             Text(
               'ณ บ้านไม้ สาย 3 กรุงเทพฯ',
-              style: TextStyle(fontSize: 16, color: kPrimaryColor),
+              style: AppFonts.kanit(
+                fontSize: 16,
+                color: kPrimaryColor,
+                fontWeight: AppFonts.extraLight,
+              ),
               textAlign: TextAlign.center,
             ),
             const SizedBox(height: 25),
@@ -564,10 +702,10 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
               children: [
                 Text(
                   'DRESS CODE : ',
-                  style: TextStyle(
+                  style: AppFonts.ttHovesPro(
                     fontSize: 12,
                     color: kPrimaryColor,
-                    fontWeight: FontWeight.w100,
+                    fontWeight: AppFonts.thin,
                   ),
                 ),
                 Container(
@@ -619,7 +757,11 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
             const SizedBox(height: 10),
             Text(
               '#เบญจเมแต่งแล้วครับ',
-              style: TextStyle(fontSize: 14, color: kPrimaryColor),
+              style: AppFonts.kanit(
+                fontSize: 14,
+                color: kPrimaryColor,
+                fontWeight: AppFonts.extraLight,
+              ),
               textAlign: TextAlign.center,
             ),
 
@@ -639,7 +781,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         children: [
           Text(
             time,
-            style: TextStyle(
+            style: AppFonts.kanit(
               fontSize: 14,
               color: kPrimaryColor,
               fontWeight: FontWeight.bold,
