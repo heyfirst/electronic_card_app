@@ -147,25 +147,61 @@ class _ThankYouPageState extends State<ThankYouPage>
   }
 
   Widget _buildHeader() {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isLargeScreen = screenWidth > 450;
+
     return Container(
-      padding: const EdgeInsets.all(40.0),
-      child: Column(
-        children: [
-          const SizedBox(height: 20),
-          // "Thank you" image
-          Row(
-            mainAxisAlignment: MainAxisAlignment.center,
-            crossAxisAlignment: CrossAxisAlignment.center,
-            children: [
-              Image.asset(
-                'assets/images/tag-thank-you.png',
-                width: MediaQuery.of(context).size.width / 4,
-                fit: BoxFit.contain,
-              ),
-            ],
-          ),
-        ],
-      ),
+      height: isLargeScreen ? 56.0 : null, // Facebook navbar standard height
+      padding: isLargeScreen
+          ? const EdgeInsets.symmetric(
+              horizontal: 20.0,
+              vertical:
+                  8.0, // Reduced vertical padding for standard navbar height
+            )
+          : const EdgeInsets.all(40.0), // Original padding
+      decoration: isLargeScreen
+          ? BoxDecoration(
+              color: Colors.white.withOpacity(0.95),
+              boxShadow: [
+                BoxShadow(
+                  color: Colors.black.withOpacity(0.08),
+                  blurRadius: 2,
+                  offset: const Offset(0, 1),
+                ),
+              ],
+            )
+          : null,
+      child: isLargeScreen
+          ? // Navbar layout for large screens
+            Row(
+              mainAxisAlignment: MainAxisAlignment.start,
+              crossAxisAlignment: CrossAxisAlignment.center,
+              children: [
+                Image.asset(
+                  'assets/images/tag-thank-you.png',
+                  height: 60, // Increased from 32 to 40
+                  fit: BoxFit.contain,
+                ),
+                // Add more navbar items here if needed
+              ],
+            )
+          : // Original center layout for small screens
+            Column(
+              children: [
+                const SizedBox(height: 30),
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  crossAxisAlignment: CrossAxisAlignment.center,
+                  children: [
+                    Image.asset(
+                      'assets/images/tag-thank-you.png',
+                      width: MediaQuery.of(context).size.width / 2,
+                      fit: BoxFit.contain,
+                    ),
+                  ],
+                ),
+              ],
+            ),
     );
   }
 
@@ -218,27 +254,55 @@ class _ThankYouPageState extends State<ThankYouPage>
       );
     }
 
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isLargeScreen = screenWidth > 450; // Larger than iPhone
+
     return Container(
-      padding: const EdgeInsets.symmetric(horizontal: 20),
-      child: ListView.builder(
-        itemCount: _wishes.length,
-        itemBuilder: (context, index) {
-          final wish = _wishes[index];
-          return _buildWishCard(wish, index);
-        },
+      padding: EdgeInsets.fromLTRB(
+        20,
+        isLargeScreen ? 40 : 20, // Add extra top padding for large screens
+        20,
+        20,
       ),
+      child: isLargeScreen
+          ? GridView.builder(
+              gridDelegate: const SliverGridDelegateWithFixedCrossAxisCount(
+                crossAxisCount: 3,
+                crossAxisSpacing: 16,
+                mainAxisSpacing: 16,
+                childAspectRatio: 1.0, // Square cards
+              ),
+              itemCount: _wishes.length,
+              itemBuilder: (context, index) {
+                final wish = _wishes[index];
+                return _buildWishCard(wish, index);
+              },
+            )
+          : ListView.builder(
+              itemCount: _wishes.length,
+              itemBuilder: (context, index) {
+                final wish = _wishes[index];
+                return _buildWishCard(wish, index);
+              },
+            ),
     );
   }
 
   Widget _buildWishCard(Map<String, dynamic> wish, int index) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isLargeScreen = screenWidth > 450;
+
     return AnimatedContainer(
       duration: Duration(milliseconds: 300 + (index * 100)),
       curve: Curves.easeOutCubic,
-      margin: const EdgeInsets.only(bottom: 16),
+      margin: isLargeScreen
+          ? EdgeInsets
+                .zero // GridView handles spacing
+          : const EdgeInsets.only(bottom: 16), // ListView spacing
       child: GestureDetector(
         onTap: () => _showWishDetail(wish),
         child: Container(
-          padding: const EdgeInsets.all(20),
+          padding: EdgeInsets.all(isLargeScreen ? 12 : 20),
           decoration: BoxDecoration(
             color: _parseColor(wish['template']).withOpacity(0.15),
             borderRadius: BorderRadius.circular(20),
@@ -262,99 +326,115 @@ class _ThankYouPageState extends State<ThankYouPage>
               Row(
                 mainAxisAlignment: MainAxisAlignment.spaceBetween,
                 children: [
-                  Row(
-                    children: [
-                      Container(
-                        width: 40,
-                        height: 40,
-                        decoration: BoxDecoration(
-                          color: _parseColor(wish['template']),
-                          borderRadius: BorderRadius.circular(20),
-                        ),
-                        child: Center(
-                          child: Text(
-                            wish['title']![0].toUpperCase(),
-                            style: TextStyle(
-                              color: Colors.white,
-                              fontSize: 18,
-                              fontWeight: FontWeight.bold,
+                  Flexible(
+                    child: Row(
+                      children: [
+                        Container(
+                          width: isLargeScreen ? 30 : 40,
+                          height: isLargeScreen ? 30 : 40,
+                          decoration: BoxDecoration(
+                            color: _parseColor(wish['template']),
+                            borderRadius: BorderRadius.circular(
+                              isLargeScreen ? 15 : 20,
+                            ),
+                          ),
+                          child: Center(
+                            child: Text(
+                              wish['title']![0].toUpperCase(),
+                              style: TextStyle(
+                                color: Colors.white,
+                                fontSize: isLargeScreen ? 14 : 18,
+                                fontWeight: FontWeight.bold,
+                              ),
                             ),
                           ),
                         ),
-                      ),
-                      const SizedBox(width: 12),
-                      Column(
-                        crossAxisAlignment: CrossAxisAlignment.start,
-                        children: [
-                          Text(
-                            wish['title'] ?? 'ไม่ระบุชื่อ',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: kPrimaryColor,
-                            ),
+                        const SizedBox(width: 12),
+                        Flexible(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                wish['title'] ?? 'ไม่ระบุชื่อ',
+                                style: TextStyle(
+                                  fontSize: isLargeScreen ? 12 : 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: kPrimaryColor,
+                                ),
+                                overflow: TextOverflow.ellipsis,
+                              ),
+                              if (!isLargeScreen)
+                                Text(
+                                  _formatDate(wish['createdAt']),
+                                  style: TextStyle(
+                                    fontSize: 12,
+                                    color: Colors.grey[500],
+                                  ),
+                                ),
+                            ],
                           ),
-                          Text(
-                            _formatDate(wish['createdAt']),
-                            style: TextStyle(
-                              fontSize: 12,
-                              color: Colors.grey[500],
-                            ),
-                          ),
-                        ],
-                      ),
-                    ],
+                        ),
+                      ],
+                    ),
                   ),
 
-                  Row(
-                    children: [
-                      Icon(Icons.favorite, color: Colors.pink[300], size: 20),
-                      const SizedBox(width: 8),
-                      Icon(Icons.visibility, color: Colors.grey[400], size: 16),
-                    ],
-                  ),
+                  if (!isLargeScreen)
+                    Row(
+                      children: [
+                        Icon(Icons.favorite, color: Colors.pink[300], size: 20),
+                        const SizedBox(width: 8),
+                        Icon(
+                          Icons.visibility,
+                          color: Colors.grey[400],
+                          size: 16,
+                        ),
+                      ],
+                    ),
                 ],
               ),
 
               const SizedBox(height: 16),
 
               // Message (truncated if too long)
-              Text(
-                wish['message'] ?? '',
-                style: TextStyle(
-                  fontSize: 15,
-                  color: Colors.grey[700],
-                  height: 1.6,
-                  letterSpacing: 0.3,
-                ),
-                maxLines: 3,
-                overflow: TextOverflow.ellipsis,
-              ),
+              isLargeScreen
+                  ? Expanded(
+                      child: Text(
+                        wish['message'] ?? '',
+                        style: TextStyle(
+                          fontSize: 11,
+                          color: Colors.grey[700],
+                          height: 1.4,
+                          letterSpacing: 0.2,
+                        ),
+                        maxLines: 4,
+                        overflow: TextOverflow.ellipsis,
+                      ),
+                    )
+                  : Text(
+                      wish['message'] ?? '',
+                      style: TextStyle(
+                        fontSize: 15,
+                        color: Colors.grey[700],
+                        height: 1.4,
+                        letterSpacing: 0.2,
+                      ),
+                      maxLines: 3,
+                      overflow: TextOverflow.ellipsis,
+                    ),
 
-              // Show "ดูเพิ่มเติม" if message is long
-              if ((wish['message'] ?? '').length > 100) ...[
-                const SizedBox(height: 8),
-                Text(
-                  'กดเพื่อดูข้อความทั้งหมด...',
-                  style: TextStyle(
-                    color: kPrimaryColor,
-                    fontSize: 12,
-                    fontStyle: FontStyle.italic,
-                  ),
-                ),
-              ],
-
-              // Image if exists
+              // Image if exists (smaller in grid view)
               if (wish['imageUrl'] != null && wish['imageUrl'] != '') ...[
-                const SizedBox(height: 16),
+                const SizedBox(height: 8),
                 ClipRRect(
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                   child: Container(
                     width: double.infinity,
-                    height: 200,
+                    height: isLargeScreen
+                        ? 250
+                        : 200, // 1/3 size for large screen
                     decoration: BoxDecoration(
                       color: Colors.grey[200],
-                      borderRadius: BorderRadius.circular(12),
+                      borderRadius: BorderRadius.circular(8),
                     ),
                     child: _buildImageWidget(
                       wish['imageUrl'],
@@ -371,6 +451,9 @@ class _ThankYouPageState extends State<ThankYouPage>
   }
 
   void _showWishDetail(Map<String, dynamic> wish) {
+    final screenWidth = MediaQuery.of(context).size.width;
+    final bool isLargeScreen = screenWidth > 450;
+
     showDialog(
       context: context,
       builder: (BuildContext context) {
@@ -380,8 +463,14 @@ class _ThankYouPageState extends State<ThankYouPage>
           ),
           child: Container(
             constraints: BoxConstraints(
-              maxWidth: MediaQuery.of(context).size.width * 0.9,
-              maxHeight: MediaQuery.of(context).size.height * 0.8,
+              maxWidth: isLargeScreen
+                  ? MediaQuery.of(context).size.width *
+                        0.7 // Wider for large screen
+                  : MediaQuery.of(context).size.width * 0.9,
+              maxHeight: isLargeScreen
+                  ? MediaQuery.of(context).size.height *
+                        0.6 // Less height for landscape style
+                  : MediaQuery.of(context).size.height * 0.8,
             ),
             padding: const EdgeInsets.all(24),
             decoration: BoxDecoration(
@@ -448,76 +537,169 @@ class _ThankYouPageState extends State<ThankYouPage>
 
                 // Full message
                 Flexible(
-                  child: SingleChildScrollView(
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          'ข้อความ',
-                          style: TextStyle(
-                            fontSize: 16,
-                            fontWeight: FontWeight.w600,
-                            color: kPrimaryColor,
-                          ),
-                        ),
-                        const SizedBox(height: 12),
-                        Container(
-                          width: double.infinity,
-                          padding: const EdgeInsets.all(16),
-                          decoration: BoxDecoration(
-                            color: _parseColor(
-                              wish['template'],
-                            ).withOpacity(0.2),
-                            borderRadius: BorderRadius.circular(12),
-                            border: Border.all(
-                              color: _parseColor(
-                                wish['template'],
-                              ).withOpacity(0.5),
-                            ),
-                          ),
-                          child: Text(
-                            wish['message'] ?? '',
-                            style: TextStyle(
-                              fontSize: 16,
-                              color: Colors.grey[700],
-                              height: 1.8,
-                              letterSpacing: 0.3,
-                            ),
-                          ),
-                        ),
-
-                        // Image if exists
-                        if (wish['imageUrl'] != null &&
-                            wish['imageUrl'] != '') ...[
-                          const SizedBox(height: 24),
-                          Text(
-                            'รูปภาพ',
-                            style: TextStyle(
-                              fontSize: 16,
-                              fontWeight: FontWeight.w600,
-                              color: kPrimaryColor,
-                            ),
-                          ),
-                          const SizedBox(height: 12),
-                          ClipRRect(
-                            borderRadius: BorderRadius.circular(12),
-                            child: Container(
-                              width: double.infinity,
-                              constraints: BoxConstraints(maxHeight: 300),
-                              decoration: BoxDecoration(
-                                color: Colors.grey[200],
-                                borderRadius: BorderRadius.circular(12),
-                              ),
-                              child: _buildImageWidget(
-                                wish['imageUrl'],
-                                isInDetail: true,
+                  child:
+                      isLargeScreen &&
+                          wish['imageUrl'] != null &&
+                          wish['imageUrl'] != ''
+                      ? // Horizontal layout for large screen with image
+                        Row(
+                          crossAxisAlignment: CrossAxisAlignment.start,
+                          children: [
+                            // Message section (left side)
+                            Expanded(
+                              flex: 2,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'ข้อความ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: kPrimaryColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Expanded(
+                                    child: Container(
+                                      width: double.infinity,
+                                      padding: const EdgeInsets.all(16),
+                                      decoration: BoxDecoration(
+                                        color: _parseColor(
+                                          wish['template'],
+                                        ).withOpacity(0.2),
+                                        borderRadius: BorderRadius.circular(12),
+                                        border: Border.all(
+                                          color: _parseColor(
+                                            wish['template'],
+                                          ).withOpacity(0.5),
+                                        ),
+                                      ),
+                                      child: SingleChildScrollView(
+                                        child: Text(
+                                          wish['message'] ?? '',
+                                          style: TextStyle(
+                                            fontSize: 16,
+                                            color: Colors.grey[700],
+                                            height: 1.8,
+                                            letterSpacing: 0.3,
+                                          ),
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
                               ),
                             ),
+                            const SizedBox(width: 24),
+                            // Image section (right side)
+                            Expanded(
+                              flex: 1,
+                              child: Column(
+                                crossAxisAlignment: CrossAxisAlignment.start,
+                                children: [
+                                  Text(
+                                    'รูปภาพ',
+                                    style: TextStyle(
+                                      fontSize: 16,
+                                      fontWeight: FontWeight.w600,
+                                      color: kPrimaryColor,
+                                    ),
+                                  ),
+                                  const SizedBox(height: 12),
+                                  Expanded(
+                                    child: ClipRRect(
+                                      borderRadius: BorderRadius.circular(12),
+                                      child: Container(
+                                        width: double.infinity,
+                                        decoration: BoxDecoration(
+                                          color: Colors.grey[200],
+                                          borderRadius: BorderRadius.circular(
+                                            12,
+                                          ),
+                                        ),
+                                        child: _buildImageWidget(
+                                          wish['imageUrl'],
+                                          isInDetail: true,
+                                        ),
+                                      ),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                            ),
+                          ],
+                        )
+                      : // Original vertical layout for small screen or no image
+                        SingleChildScrollView(
+                          child: Column(
+                            crossAxisAlignment: CrossAxisAlignment.start,
+                            children: [
+                              Text(
+                                'ข้อความ',
+                                style: TextStyle(
+                                  fontSize: 16,
+                                  fontWeight: FontWeight.w600,
+                                  color: kPrimaryColor,
+                                ),
+                              ),
+                              const SizedBox(height: 12),
+                              Container(
+                                width: double.infinity,
+                                padding: const EdgeInsets.all(16),
+                                decoration: BoxDecoration(
+                                  color: _parseColor(
+                                    wish['template'],
+                                  ).withOpacity(0.2),
+                                  borderRadius: BorderRadius.circular(12),
+                                  border: Border.all(
+                                    color: _parseColor(
+                                      wish['template'],
+                                    ).withOpacity(0.5),
+                                  ),
+                                ),
+                                child: Text(
+                                  wish['message'] ?? '',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    color: Colors.grey[700],
+                                    height: 1.8,
+                                    letterSpacing: 0.3,
+                                  ),
+                                ),
+                              ),
+                              // Image if exists
+                              if (wish['imageUrl'] != null &&
+                                  wish['imageUrl'] != '') ...[
+                                const SizedBox(height: 24),
+                                Text(
+                                  'รูปภาพ',
+                                  style: TextStyle(
+                                    fontSize: 16,
+                                    fontWeight: FontWeight.w600,
+                                    color: kPrimaryColor,
+                                  ),
+                                ),
+                                const SizedBox(height: 12),
+                                ClipRRect(
+                                  borderRadius: BorderRadius.circular(12),
+                                  child: Container(
+                                    width: double.infinity,
+                                    constraints: BoxConstraints(maxHeight: 300),
+                                    decoration: BoxDecoration(
+                                      color: Colors.grey[200],
+                                      borderRadius: BorderRadius.circular(12),
+                                    ),
+                                    child: _buildImageWidget(
+                                      wish['imageUrl'],
+                                      isInDetail: true,
+                                    ),
+                                  ),
+                                ),
+                              ],
+                            ],
                           ),
-                        ],
-                      ],
-                    ),
-                  ),
+                        ),
                 ),
               ],
             ),
