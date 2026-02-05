@@ -131,6 +131,7 @@ class _WishesPageState extends State<WishesPage> {
                         ),
                         const SizedBox(height: 10),
                         Container(
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey[300]!),
                             borderRadius: BorderRadius.circular(12),
@@ -166,6 +167,7 @@ class _WishesPageState extends State<WishesPage> {
                         ),
                         const SizedBox(height: 10),
                         Container(
+                          width: double.infinity,
                           decoration: BoxDecoration(
                             border: Border.all(color: Colors.grey[300]!),
                             borderRadius: BorderRadius.circular(12),
@@ -272,7 +274,7 @@ class _WishesPageState extends State<WishesPage> {
                                           ),
                                         ),
                                         Text(
-                                          '${kIsWeb ? _selectedImagesData.length : _selectedImages.length} รูปที่เลือก',
+                                          '${kIsWeb ? (_selectedImagesData.isNotEmpty ? "1" : "0") : (_selectedImages.isNotEmpty ? "1" : "0")} รูปที่เลือก',
                                           style: TextStyle(
                                             fontSize: 12,
                                             color: Colors.grey[600],
@@ -318,136 +320,77 @@ class _WishesPageState extends State<WishesPage> {
                                 ],
                               ),
                               const SizedBox(height: 12),
-                              SizedBox(
-                                height: 120,
-                                child: ListView.builder(
-                                  scrollDirection: Axis.horizontal,
-                                  itemCount: kIsWeb
-                                      ? _selectedImagesData.length
-                                      : _selectedImages.length,
-                                  itemBuilder: (context, index) {
-                                    return AnimatedContainer(
-                                      duration: Duration(milliseconds: 200),
-                                      margin: EdgeInsets.only(right: 12),
-                                      decoration: BoxDecoration(
-                                        borderRadius: BorderRadius.circular(12),
-                                        boxShadow: [
-                                          BoxShadow(
-                                            color: Colors.black.withOpacity(
-                                              0.1,
-                                            ),
-                                            spreadRadius: 1,
-                                            blurRadius: 6,
-                                            offset: const Offset(0, 2),
-                                          ),
-                                        ],
+                              // Full width image preview for single image
+                              Container(
+                                width: double.infinity,
+                                height: 200,
+                                decoration: BoxDecoration(
+                                  border: Border.all(color: Colors.grey[300]!),
+                                  borderRadius: BorderRadius.circular(12),
+                                ),
+                                child: Stack(
+                                  children: [
+                                    ClipRRect(
+                                      borderRadius: BorderRadius.circular(11),
+                                      child: SizedBox(
+                                        width: double.infinity,
+                                        height: 200,
+                                        child: kIsWeb
+                                            ? Image.memory(
+                                                _selectedImagesData.first,
+                                                width: double.infinity,
+                                                height: 200,
+                                                fit: BoxFit.cover,
+                                              )
+                                            : Image.file(
+                                                _selectedImages.first,
+                                                width: double.infinity,
+                                                height: 200,
+                                                fit: BoxFit.cover,
+                                              ),
                                       ),
-                                      child: Stack(
-                                        children: [
-                                          Container(
-                                            width: 120,
-                                            height: 120,
-                                            decoration: BoxDecoration(
-                                              borderRadius:
-                                                  BorderRadius.circular(12),
-                                              border: Border.all(
-                                                color: kPrimaryColor
-                                                    .withOpacity(0.2),
-                                                width: 2,
+                                    ),
+                                    Positioned(
+                                      top: 8,
+                                      right: 8,
+                                      child: GestureDetector(
+                                        onTap: () {
+                                          if (mounted) {
+                                            setState(() {
+                                              if (kIsWeb) {
+                                                _selectedImagesData.clear();
+                                                _selectedImageNames.clear();
+                                              } else {
+                                                _selectedImages.clear();
+                                              }
+                                            });
+                                          }
+                                        },
+                                        child: Container(
+                                          padding: EdgeInsets.all(6),
+                                          decoration: BoxDecoration(
+                                            color: Colors.red.shade500,
+                                            shape: BoxShape.circle,
+                                            boxShadow: [
+                                              BoxShadow(
+                                                color: Colors.red.withOpacity(
+                                                  0.4,
+                                                ),
+                                                spreadRadius: 1,
+                                                blurRadius: 4,
+                                                offset: const Offset(0, 2),
                                               ),
-                                            ),
-                                            child: ClipRRect(
-                                              borderRadius:
-                                                  BorderRadius.circular(10),
-                                              child: kIsWeb
-                                                  ? Image.memory(
-                                                      _selectedImagesData[index],
-                                                      width: 120,
-                                                      height: 120,
-                                                      fit: BoxFit.cover,
-                                                    )
-                                                  : Image.file(
-                                                      _selectedImages[index],
-                                                      width: 120,
-                                                      height: 120,
-                                                      fit: BoxFit.cover,
-                                                    ),
-                                            ),
+                                            ],
                                           ),
-                                          Positioned(
-                                            top: 8,
-                                            right: 8,
-                                            child: GestureDetector(
-                                              onTap: () {
-                                                setState(() {
-                                                  if (kIsWeb) {
-                                                    _selectedImagesData
-                                                        .removeAt(index);
-                                                    _selectedImageNames
-                                                        .removeAt(index);
-                                                  } else {
-                                                    _selectedImages.removeAt(
-                                                      index,
-                                                    );
-                                                  }
-                                                });
-                                              },
-                                              child: Container(
-                                                padding: EdgeInsets.all(6),
-                                                decoration: BoxDecoration(
-                                                  color: Colors.red.shade500,
-                                                  shape: BoxShape.circle,
-                                                  boxShadow: [
-                                                    BoxShadow(
-                                                      color: Colors.red
-                                                          .withOpacity(0.4),
-                                                      spreadRadius: 1,
-                                                      blurRadius: 4,
-                                                      offset: const Offset(
-                                                        0,
-                                                        2,
-                                                      ),
-                                                    ),
-                                                  ],
-                                                ),
-                                                child: Icon(
-                                                  Icons.close,
-                                                  color: Colors.white,
-                                                  size: 16,
-                                                ),
-                                              ),
-                                            ),
+                                          child: Icon(
+                                            Icons.close,
+                                            color: Colors.white,
+                                            size: 16,
                                           ),
-                                          // Image count badge
-                                          Positioned(
-                                            bottom: 8,
-                                            left: 8,
-                                            child: Container(
-                                              padding: EdgeInsets.symmetric(
-                                                horizontal: 8,
-                                                vertical: 4,
-                                              ),
-                                              decoration: BoxDecoration(
-                                                color: Colors.black.withOpacity(
-                                                  0.7,
-                                                ),
-                                                borderRadius:
-                                                    BorderRadius.circular(12),
-                                              ),
-                                              child: Text(
-                                                '${index + 1}',
-                                                style: TextStyle(
-                                                  color: Colors.white,
-                                                  fontSize: 12,
-                                                  fontWeight: FontWeight.w600,
-                                                ),
-                                              ),
-                                            ),
-                                          ),
-                                        ],
+                                        ),
                                       ),
-                                    );
-                                  },
+                                    ),
+                                  ],
                                 ),
                               ),
                             ],
@@ -855,7 +798,7 @@ class _WishesPageState extends State<WishesPage> {
                             ),
                             const SizedBox(height: 8),
                             Container(
-                              width: 80,
+                              width: double.infinity,
                               height: 80,
                               decoration: BoxDecoration(
                                 borderRadius: BorderRadius.circular(8),
@@ -1195,17 +1138,24 @@ class _WishesPageState extends State<WishesPage> {
 
       if (image != null) {
         if (kIsWeb) {
-          // For web, read as bytes and store filename
+          // For web, read as bytes and store filename (replace existing)
           final bytes = await image.readAsBytes();
-          setState(() {
-            _selectedImagesData.add(bytes);
-            _selectedImageNames.add(image.name);
-          });
+          if (mounted) {
+            setState(() {
+              _selectedImagesData.clear(); // Clear existing
+              _selectedImageNames.clear(); // Clear existing
+              _selectedImagesData.add(bytes);
+              _selectedImageNames.add(image.name);
+            });
+          }
         } else {
-          // For mobile, use File
-          setState(() {
-            _selectedImages.add(File(image.path));
-          });
+          // For mobile, use File (replace existing)
+          if (mounted) {
+            setState(() {
+              _selectedImages.clear(); // Clear existing
+              _selectedImages.add(File(image.path));
+            });
+          }
         }
       }
     } catch (e) {
