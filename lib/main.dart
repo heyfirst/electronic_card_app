@@ -22,7 +22,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return MaterialApp(
-      title: 'Wedding Invitation',
+      title: 'Ben Mea The Wedding',
       theme: ThemeData(
         primarySwatch: Colors.grey,
         fontFamily: 'Kanit', // Use Kanit as default
