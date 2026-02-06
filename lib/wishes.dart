@@ -11,6 +11,7 @@ import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
 import 'config/api_config.dart';
+import 'main.dart';
 
 // Global color constant
 const Color kPrimaryColor = Color(0xFF7E8B78);
@@ -1177,8 +1178,14 @@ class _WishesPageState extends State<WishesPage> {
                     setState(() {
                       _showSuccess = false;
                     });
-                    // Navigate to Thank You page using named route
-                    Navigator.of(context).pushReplacementNamed('/thank-you');
+
+                    // Simply navigate to the thank you tab
+                    Navigator.of(context).pushAndRemoveUntil(
+                      MaterialPageRoute(
+                        builder: (context) => MyHomePage(initialIndex: 4),
+                      ),
+                      (Route<dynamic> route) => false,
+                    );
                   },
                   style: ElevatedButton.styleFrom(
                     backgroundColor: Colors.grey[100],
