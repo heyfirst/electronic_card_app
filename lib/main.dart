@@ -141,6 +141,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         color: screenWidth > 768 ? Colors.grey[100] : Colors.white,
         child: PageView(
           controller: _pageController,
+          scrollDirection: Axis.vertical,
           onPageChanged: (index) {
             setState(() {
               _currentIndex = index;
@@ -526,7 +527,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                               textAlign: TextAlign.center,
                             ),
                             Text(
-                              'นางสุรพงษ์ กรวิริยะกิจ',
+                              'นางสุรพจน์ กรวิริยะกิจ',
                               style: AppFonts.kanit(
                                 fontSize: 16,
                                 color: kPrimaryColor,
@@ -590,7 +591,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                                 textAlign: TextAlign.center,
                               ),
                               Text(
-                                'นางสุรพงษ์ กรวิริยะกิจ',
+                                'นางสุรพจน์ กรวิริยะกิจ',
                                 style: AppFonts.kanit(
                                   fontSize: 16,
                                   color: kPrimaryColor,

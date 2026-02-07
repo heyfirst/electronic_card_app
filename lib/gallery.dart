@@ -21,7 +21,6 @@ class _GalleryPageState extends State<GalleryPage>
     with AutomaticKeepAliveClientMixin {
   List<String> galleryImages = [];
   bool _isLoadingImages = true;
-  bool _showGif = false; // Track if showing GIF
 
   @override
   bool get wantKeepAlive => true;
@@ -87,7 +86,9 @@ class _GalleryPageState extends State<GalleryPage>
               Text(
                 'Journey of Us',
                 style: AppFonts.ttHovesPro(
-                  fontSize: 60,
+                  fontSize: MediaQuery.of(context).size.width < 375
+                      ? 45
+                      : 60, // Responsive font size
                   color: Colors.white,
                   fontWeight: AppFonts.regular,
                   fontStyle: FontStyle.italic,
@@ -107,18 +108,21 @@ class _GalleryPageState extends State<GalleryPage>
                 textAlign: TextAlign.center,
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // Photo Card
               Expanded(
                 child: Center(
                   child: Container(
-                    width: double.infinity,
-                    constraints: const BoxConstraints(
-                      maxWidth: 400, // Maximum width for desktop
-                      maxHeight: 600, // Maximum height for desktop
+                    constraints: BoxConstraints(
+                      maxWidth: MediaQuery.of(context).size.width < 400
+                          ? MediaQuery.of(context).size.width - 20
+                          : 400, // Responsive max width
+                      maxHeight:
+                          MediaQuery.of(context).size.height *
+                          0.6, // Max 60% of screen height
                     ),
-                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    margin: const EdgeInsets.symmetric(horizontal: 10),
                     decoration: BoxDecoration(
                       color: Colors.white,
                       borderRadius: BorderRadius.circular(20),
@@ -133,195 +137,80 @@ class _GalleryPageState extends State<GalleryPage>
                     ),
                     child: Padding(
                       padding: const EdgeInsets.all(15.0),
-                      child: Column(
-                        children: [
-                          // Photo Container
-                          Expanded(
-                            child: Container(
-                              width: double.infinity,
-                              decoration: BoxDecoration(
-                                borderRadius: BorderRadius.circular(15),
-                                color: Colors.grey[200],
-                              ),
-                              child: GestureDetector(
-                                onTap: () {
-                                  setState(() {
-                                    _showGif = !_showGif;
-                                  });
-                                },
-                                child: ClipRRect(
-                                  borderRadius: BorderRadius.circular(15),
-                                  child: _showGif
-                                      ? Image.asset(
-                                          'assets/images/gallery-preview.GIF',
-                                          fit: BoxFit.cover,
-                                          errorBuilder: (context, error, stackTrace) {
-                                            // If GIF fails to load, fallback to JPEG
-                                            return Image.asset(
-                                              'assets/images/gallery-preview.jpeg',
-                                              fit: BoxFit.cover,
-                                              errorBuilder: (context, error, stackTrace) {
-                                                return Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          15,
-                                                        ),
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                      colors: [
-                                                        const Color(
-                                                          0xFFBFC6B4,
-                                                        ).withValues(
-                                                          alpha: 0.3,
-                                                        ),
-                                                        const Color(
-                                                          0xFF7E8B78,
-                                                        ).withValues(
-                                                          alpha: 0.1,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(
-                                                          Icons
-                                                              .photo_camera_outlined,
-                                                          size: 80,
-                                                          color: kPrimaryColor
-                                                              .withValues(
-                                                                alpha: 0.6,
-                                                              ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 15,
-                                                        ),
-                                                        Text(
-                                                          'Wedding Photos',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            color:
-                                                                kPrimaryColor,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        Text(
-                                                          'Coming Soon',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: kPrimaryColor
-                                                                .withValues(
-                                                                  alpha: 0.7,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
-                                            );
-                                          },
-                                        )
-                                      : Image.asset(
-                                          'assets/images/gallery-preview.jpeg',
-                                          fit: BoxFit.cover,
-                                          errorBuilder:
-                                              (context, error, stackTrace) {
-                                                return Container(
-                                                  decoration: BoxDecoration(
-                                                    borderRadius:
-                                                        BorderRadius.circular(
-                                                          15,
-                                                        ),
-                                                    gradient: LinearGradient(
-                                                      begin: Alignment.topLeft,
-                                                      end:
-                                                          Alignment.bottomRight,
-                                                      colors: [
-                                                        const Color(
-                                                          0xFFBFC6B4,
-                                                        ).withValues(
-                                                          alpha: 0.3,
-                                                        ),
-                                                        const Color(
-                                                          0xFF7E8B78,
-                                                        ).withValues(
-                                                          alpha: 0.1,
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                  child: Center(
-                                                    child: Column(
-                                                      mainAxisAlignment:
-                                                          MainAxisAlignment
-                                                              .center,
-                                                      children: [
-                                                        Icon(
-                                                          Icons
-                                                              .photo_camera_outlined,
-                                                          size: 80,
-                                                          color: kPrimaryColor
-                                                              .withValues(
-                                                                alpha: 0.6,
-                                                              ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 15,
-                                                        ),
-                                                        Text(
-                                                          'Wedding Photos',
-                                                          style: TextStyle(
-                                                            fontSize: 18,
-                                                            color:
-                                                                kPrimaryColor,
-                                                            fontWeight:
-                                                                FontWeight.w500,
-                                                          ),
-                                                        ),
-                                                        const SizedBox(
-                                                          height: 8,
-                                                        ),
-                                                        Text(
-                                                          'Coming Soon',
-                                                          style: TextStyle(
-                                                            fontSize: 14,
-                                                            color: kPrimaryColor
-                                                                .withValues(
-                                                                  alpha: 0.7,
-                                                                ),
-                                                          ),
-                                                        ),
-                                                      ],
-                                                    ),
-                                                  ),
-                                                );
-                                              },
+                      child: ClipRRect(
+                        borderRadius: BorderRadius.circular(15),
+                        child: Image.asset(
+                          'assets/images/gallery-preview.GIF',
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) {
+                            // If GIF fails to load, fallback to JPEG
+                            return Image.asset(
+                              'assets/images/gallery-preview.jpeg',
+                              fit: BoxFit.cover,
+                              errorBuilder: (context, error, stackTrace) {
+                                return Container(
+                                  height: 300,
+                                  decoration: BoxDecoration(
+                                    borderRadius: BorderRadius.circular(15),
+                                    gradient: LinearGradient(
+                                      begin: Alignment.topLeft,
+                                      end: Alignment.bottomRight,
+                                      colors: [
+                                        const Color(
+                                          0xFFBFC6B4,
+                                        ).withValues(alpha: 0.3),
+                                        const Color(
+                                          0xFF7E8B78,
+                                        ).withValues(alpha: 0.1),
+                                      ],
+                                    ),
+                                  ),
+                                  child: Center(
+                                    child: Column(
+                                      mainAxisAlignment:
+                                          MainAxisAlignment.center,
+                                      children: [
+                                        Icon(
+                                          Icons.photo_camera_outlined,
+                                          size: 80,
+                                          color: kPrimaryColor.withValues(
+                                            alpha: 0.6,
+                                          ),
                                         ),
-                                ),
-                              ),
-                            ),
-                          ),
-                        ],
+                                        const SizedBox(height: 15),
+                                        Text(
+                                          'Wedding Photos',
+                                          style: TextStyle(
+                                            fontSize: 18,
+                                            color: kPrimaryColor,
+                                            fontWeight: FontWeight.w500,
+                                          ),
+                                        ),
+                                        const SizedBox(height: 8),
+                                        Text(
+                                          'Coming Soon',
+                                          style: TextStyle(
+                                            fontSize: 14,
+                                            color: kPrimaryColor.withValues(
+                                              alpha: 0.7,
+                                            ),
+                                          ),
+                                        ),
+                                      ],
+                                    ),
+                                  ),
+                                );
+                              },
+                            );
+                          },
+                        ),
                       ),
                     ),
                   ),
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
 
               // View All Photos Button
               Center(
@@ -329,8 +218,11 @@ class _GalleryPageState extends State<GalleryPage>
                   width: double.infinity,
                   constraints: const BoxConstraints(
                     maxWidth: 400, // Maximum width for desktop
+                    minWidth: 300, // Minimum width for iPhone SE
                   ),
-                  margin: const EdgeInsets.symmetric(horizontal: 40),
+                  margin: const EdgeInsets.symmetric(
+                    horizontal: 30,
+                  ), // Adjusted margin for iPhone SE
                   child: ElevatedButton(
                     onPressed: _isLoadingImages || galleryImages.isEmpty
                         ? null
@@ -362,7 +254,7 @@ class _GalleryPageState extends State<GalleryPage>
                 ),
               ),
 
-              const SizedBox(height: 40),
+              const SizedBox(height: 20),
             ],
           ),
         ),
