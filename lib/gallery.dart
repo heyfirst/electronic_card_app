@@ -21,6 +21,7 @@ class _GalleryPageState extends State<GalleryPage>
     with AutomaticKeepAliveClientMixin {
   List<String> galleryImages = [];
   bool _isLoadingImages = true;
+  bool _showGif = false; // Track if showing GIF
 
   @override
   bool get wantKeepAlive => true;
@@ -110,96 +111,211 @@ class _GalleryPageState extends State<GalleryPage>
 
               // Photo Card
               Expanded(
-                child: Container(
-                  width: double.infinity,
-                  margin: const EdgeInsets.symmetric(horizontal: 20),
-                  decoration: BoxDecoration(
-                    color: Colors.white,
-                    borderRadius: BorderRadius.circular(20),
-                    boxShadow: [
-                      BoxShadow(
-                        color: Colors.black.withValues(alpha: 0.1),
-                        spreadRadius: 2,
-                        blurRadius: 10,
-                        offset: const Offset(0, 4),
-                      ),
-                    ],
-                  ),
-                  child: Padding(
-                    padding: const EdgeInsets.all(15.0),
-                    child: Column(
-                      children: [
-                        // Photo Container
-                        Expanded(
-                          child: Container(
-                            width: double.infinity,
-                            decoration: BoxDecoration(
-                              borderRadius: BorderRadius.circular(15),
-                              color: Colors.grey[200],
-                            ),
-                            child: ClipRRect(
-                              borderRadius: BorderRadius.circular(15),
-                              child: Image.asset(
-                                'assets/images/gallery-preview.jpeg',
-                                fit: BoxFit.cover,
-                                errorBuilder: (context, error, stackTrace) {
-                                  return Container(
-                                    decoration: BoxDecoration(
-                                      borderRadius: BorderRadius.circular(15),
-                                      gradient: LinearGradient(
-                                        begin: Alignment.topLeft,
-                                        end: Alignment.bottomRight,
-                                        colors: [
-                                          const Color(
-                                            0xFFBFC6B4,
-                                          ).withValues(alpha: 0.3),
-                                          const Color(
-                                            0xFF7E8B78,
-                                          ).withValues(alpha: 0.1),
-                                        ],
-                                      ),
-                                    ),
-                                    child: Center(
-                                      child: Column(
-                                        mainAxisAlignment:
-                                            MainAxisAlignment.center,
-                                        children: [
-                                          Icon(
-                                            Icons.photo_camera_outlined,
-                                            size: 80,
-                                            color: kPrimaryColor.withValues(
-                                              alpha: 0.6,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 15),
-                                          Text(
-                                            'Wedding Photos',
-                                            style: TextStyle(
-                                              fontSize: 18,
-                                              color: kPrimaryColor,
-                                              fontWeight: FontWeight.w500,
-                                            ),
-                                          ),
-                                          const SizedBox(height: 8),
-                                          Text(
-                                            'Coming Soon',
-                                            style: TextStyle(
-                                              fontSize: 14,
-                                              color: kPrimaryColor.withValues(
-                                                alpha: 0.7,
-                                              ),
-                                            ),
-                                          ),
-                                        ],
-                                      ),
-                                    ),
-                                  );
+                child: Center(
+                  child: Container(
+                    width: double.infinity,
+                    constraints: const BoxConstraints(
+                      maxWidth: 400, // Maximum width for desktop
+                      maxHeight: 600, // Maximum height for desktop
+                    ),
+                    margin: const EdgeInsets.symmetric(horizontal: 20),
+                    decoration: BoxDecoration(
+                      color: Colors.white,
+                      borderRadius: BorderRadius.circular(20),
+                      boxShadow: [
+                        BoxShadow(
+                          color: Colors.black.withValues(alpha: 0.1),
+                          spreadRadius: 2,
+                          blurRadius: 10,
+                          offset: const Offset(0, 4),
+                        ),
+                      ],
+                    ),
+                    child: Padding(
+                      padding: const EdgeInsets.all(15.0),
+                      child: Column(
+                        children: [
+                          // Photo Container
+                          Expanded(
+                            child: Container(
+                              width: double.infinity,
+                              decoration: BoxDecoration(
+                                borderRadius: BorderRadius.circular(15),
+                                color: Colors.grey[200],
+                              ),
+                              child: GestureDetector(
+                                onTap: () {
+                                  setState(() {
+                                    _showGif = !_showGif;
+                                  });
                                 },
+                                child: ClipRRect(
+                                  borderRadius: BorderRadius.circular(15),
+                                  child: _showGif
+                                      ? Image.asset(
+                                          'assets/images/gallery-preview.GIF',
+                                          fit: BoxFit.cover,
+                                          errorBuilder: (context, error, stackTrace) {
+                                            // If GIF fails to load, fallback to JPEG
+                                            return Image.asset(
+                                              'assets/images/gallery-preview.jpeg',
+                                              fit: BoxFit.cover,
+                                              errorBuilder: (context, error, stackTrace) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          15,
+                                                        ),
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                      colors: [
+                                                        const Color(
+                                                          0xFFBFC6B4,
+                                                        ).withValues(
+                                                          alpha: 0.3,
+                                                        ),
+                                                        const Color(
+                                                          0xFF7E8B78,
+                                                        ).withValues(
+                                                          alpha: 0.1,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .photo_camera_outlined,
+                                                          size: 80,
+                                                          color: kPrimaryColor
+                                                              .withValues(
+                                                                alpha: 0.6,
+                                                              ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Text(
+                                                          'Wedding Photos',
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            color:
+                                                                kPrimaryColor,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                        Text(
+                                                          'Coming Soon',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: kPrimaryColor
+                                                                .withValues(
+                                                                  alpha: 0.7,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                            );
+                                          },
+                                        )
+                                      : Image.asset(
+                                          'assets/images/gallery-preview.jpeg',
+                                          fit: BoxFit.cover,
+                                          errorBuilder:
+                                              (context, error, stackTrace) {
+                                                return Container(
+                                                  decoration: BoxDecoration(
+                                                    borderRadius:
+                                                        BorderRadius.circular(
+                                                          15,
+                                                        ),
+                                                    gradient: LinearGradient(
+                                                      begin: Alignment.topLeft,
+                                                      end:
+                                                          Alignment.bottomRight,
+                                                      colors: [
+                                                        const Color(
+                                                          0xFFBFC6B4,
+                                                        ).withValues(
+                                                          alpha: 0.3,
+                                                        ),
+                                                        const Color(
+                                                          0xFF7E8B78,
+                                                        ).withValues(
+                                                          alpha: 0.1,
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                  child: Center(
+                                                    child: Column(
+                                                      mainAxisAlignment:
+                                                          MainAxisAlignment
+                                                              .center,
+                                                      children: [
+                                                        Icon(
+                                                          Icons
+                                                              .photo_camera_outlined,
+                                                          size: 80,
+                                                          color: kPrimaryColor
+                                                              .withValues(
+                                                                alpha: 0.6,
+                                                              ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 15,
+                                                        ),
+                                                        Text(
+                                                          'Wedding Photos',
+                                                          style: TextStyle(
+                                                            fontSize: 18,
+                                                            color:
+                                                                kPrimaryColor,
+                                                            fontWeight:
+                                                                FontWeight.w500,
+                                                          ),
+                                                        ),
+                                                        const SizedBox(
+                                                          height: 8,
+                                                        ),
+                                                        Text(
+                                                          'Coming Soon',
+                                                          style: TextStyle(
+                                                            fontSize: 14,
+                                                            color: kPrimaryColor
+                                                                .withValues(
+                                                                  alpha: 0.7,
+                                                                ),
+                                                          ),
+                                                        ),
+                                                      ],
+                                                    ),
+                                                  ),
+                                                );
+                                              },
+                                        ),
+                                ),
                               ),
                             ),
                           ),
-                        ),
-                      ],
+                        ],
+                      ),
                     ),
                   ),
                 ),
@@ -208,34 +324,39 @@ class _GalleryPageState extends State<GalleryPage>
               const SizedBox(height: 40),
 
               // View All Photos Button
-              Container(
-                width: double.infinity,
-                margin: const EdgeInsets.symmetric(horizontal: 40),
-                child: ElevatedButton(
-                  onPressed: _isLoadingImages || galleryImages.isEmpty
-                      ? null
-                      : () {
-                          _showFullGallery(context);
-                        },
-                  style: ElevatedButton.styleFrom(
-                    backgroundColor: Colors.white,
-                    foregroundColor: kPrimaryColor,
-                    padding: const EdgeInsets.symmetric(vertical: 15),
-                    shape: RoundedRectangleBorder(
-                      borderRadius: BorderRadius.circular(25),
-                    ),
-                    elevation: 2,
+              Center(
+                child: Container(
+                  width: double.infinity,
+                  constraints: const BoxConstraints(
+                    maxWidth: 400, // Maximum width for desktop
                   ),
-                  child: Text(
-                    _isLoadingImages
-                        ? 'กำลังโหลด...'
-                        : galleryImages.isEmpty
-                        ? 'ไม่มีรูปภาพ'
-                        : 'ดูรูปทั้งหมด',
-                    style: TextStyle(
-                      fontSize: 16,
-                      fontWeight: FontWeight.w500,
-                      color: kPrimaryColor,
+                  margin: const EdgeInsets.symmetric(horizontal: 40),
+                  child: ElevatedButton(
+                    onPressed: _isLoadingImages || galleryImages.isEmpty
+                        ? null
+                        : () {
+                            _showFullGallery(context);
+                          },
+                    style: ElevatedButton.styleFrom(
+                      backgroundColor: Colors.white,
+                      foregroundColor: kPrimaryColor,
+                      padding: const EdgeInsets.symmetric(vertical: 15),
+                      shape: RoundedRectangleBorder(
+                        borderRadius: BorderRadius.circular(25),
+                      ),
+                      elevation: 2,
+                    ),
+                    child: Text(
+                      _isLoadingImages
+                          ? 'กำลังโหลด...'
+                          : galleryImages.isEmpty
+                          ? 'ไม่มีรูปภาพ'
+                          : 'ดูรูปทั้งหมด',
+                      style: TextStyle(
+                        fontSize: 16,
+                        fontWeight: FontWeight.w500,
+                        color: kPrimaryColor,
+                      ),
                     ),
                   ),
                 ),
