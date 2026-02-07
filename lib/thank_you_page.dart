@@ -6,6 +6,7 @@ import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
 import 'config/api_config.dart';
+import 'utils/utils.dart';
 
 // Global color constants
 const Color kPrimaryColor = Color(0xFF7E8B78);
@@ -31,6 +32,7 @@ class _ThankYouPageState extends State<ThankYouPage>
   bool _isLoading = true;
   Timer? _refreshTimer;
   String? _lastDataHash; // For checking data changes
+  DateTime? _allowedDate;
 
   @override
   void initState() {
@@ -68,10 +70,73 @@ class _ThankYouPageState extends State<ThankYouPage>
     _startAutoRefreshTimer();
   }
 
-  void _startAutoRefreshTimer() {
+  void _startAutoRefreshTimer() async {
+    // Check if it's the wedding day
+    bool isWeddingDay = await _isWeddingDay();
+
+    if (!isWeddingDay) {
+      // If not wedding day (before or after), don't start timer
+      return;
+    }
+
+    // If wedding day, start periodic timer
     _refreshTimer = Timer.periodic(Duration(seconds: 3), (timer) {
       _checkForDataChanges();
     });
+  }
+
+  Future<DateTime?> _getAllowedDateFromToken() async {
+    if (_allowedDate != null) {
+      return _allowedDate;
+    }
+
+    try {
+      final response = await http.post(
+        Uri.parse(ApiConfig.guestTokens),
+        headers: {'Content-Type': 'application/json'},
+      );
+
+      if (response.statusCode == 200) {
+        final data = json.decode(response.body);
+        final allowedDateString = data['allowedDate'] as String?;
+        if (allowedDateString != null) {
+          _allowedDate = DateTime.parse(allowedDateString);
+          return _allowedDate;
+        }
+      } else if (response.statusCode == 403) {
+        final errorData = json.decode(response.body);
+        final allowedDateString = errorData['allowedDate'] as String?;
+        if (allowedDateString != null) {
+          _allowedDate = DateTime.parse(allowedDateString);
+          return _allowedDate;
+        }
+      }
+    } catch (e) {
+      if (kDebugMode) {
+        debugPrint('Error fetching allowed date: $e');
+      }
+    }
+
+    return null;
+  }
+
+  Future<bool> _isWeddingDay() async {
+    final now = DateTime.now();
+    final allowedDate = await _getAllowedDateFromToken();
+
+    if (allowedDate == null) {
+      return false;
+    }
+
+    final nowDate = DateTime(now.year, now.month, now.day);
+    final allowedDateOnly = DateTime(
+      allowedDate.year,
+      allowedDate.month,
+      allowedDate.day,
+    );
+
+    // Return true only if today is exactly the wedding day
+    return nowDate.isAtSameMomentAs(allowedDateOnly);
   }
 
   @override
@@ -84,6 +149,9 @@ class _ThankYouPageState extends State<ThankYouPage>
 
   Future<void> _checkForDataChanges() async {
     try {
+      // Get stored token using TokenUtils
+      String token = await TokenUtils.getOrGenerateToken();
+
       final response = await http.get(
         Uri.parse(ApiConfig.cards),
         headers: {
@@ -92,6 +160,7 @@ class _ThankYouPageState extends State<ThankYouPage>
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Allow-Headers':
               'Origin, Content-Type, Accept, Authorization, X-Request-With',
+          'Authorization': 'Bearer $token',
         },
       );
 
@@ -159,6 +228,9 @@ class _ThankYouPageState extends State<ThankYouPage>
 
   Future<void> _loadWishes() async {
     try {
+      // Get stored token using TokenUtils
+      String token = await TokenUtils.getOrGenerateToken();
+
       final response = await http.get(
         Uri.parse(ApiConfig.cards),
         headers: {
@@ -167,6 +239,7 @@ class _ThankYouPageState extends State<ThankYouPage>
           'Access-Control-Allow-Methods': 'GET, POST, OPTIONS',
           'Access-Control-Allow-Headers':
               'Origin, Content-Type, Accept, Authorization, X-Request-With',
+          'Authorization': 'Bearer $token',
         },
       );
 
