@@ -339,6 +339,9 @@ class WeddingTimelineModal extends StatelessWidget {
                 const SizedBox(height: 70),
                 Expanded(
                   child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
                     padding: EdgeInsets.symmetric(
                       horizontal: isDesktop ? 60 : 20,
                       vertical: 20,
