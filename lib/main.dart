@@ -142,6 +142,7 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
         child: PageView(
           controller: _pageController,
           scrollDirection: Axis.vertical,
+          physics: const BouncingScrollPhysics(),
           onPageChanged: (index) {
             setState(() {
               _currentIndex = index;
