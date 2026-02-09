@@ -3,11 +3,11 @@ import 'dart:async';
 import 'package:flutter/material.dart';
 
 import 'font_styles.dart';
-import 'gallery.dart';
-import 'schedule.dart';
-import 'splash_screen.dart';
-import 'thank_you_page.dart';
-import 'wishes.dart';
+import 'pages/gallery.dart';
+import 'pages/schedule.dart';
+import 'pages/splash_screen.dart';
+import 'pages/thank_you_page.dart';
+import 'pages/wishes.dart';
 
 // Global color constant
 const Color kPrimaryColor = Color(0xFF7E8B78);
