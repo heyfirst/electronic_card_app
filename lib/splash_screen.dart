@@ -16,7 +16,6 @@ class _SplashScreenState extends State<SplashScreen>
   late Animation<double> _fadeAnimation;
   late Animation<double> _scaleAnimation;
   late Animation<double> _whiteFadeAnimation;
-  bool _imagesPreloaded = false;
 
   @override
   void initState() {
@@ -79,19 +78,8 @@ class _SplashScreenState extends State<SplashScreen>
           });
         }),
       );
-
-      if (mounted) {
-        setState(() {
-          _imagesPreloaded = true;
-        });
-      }
     } catch (e) {
       debugPrint('Error preloading images: $e');
-      if (mounted) {
-        setState(() {
-          _imagesPreloaded = true; // Continue anyway
-        });
-      }
     }
 
     // Navigate after images are loaded and animation completes
