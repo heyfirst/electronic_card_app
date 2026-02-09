@@ -136,7 +136,7 @@ class _GalleryPageState extends State<GalleryPage>
         _isLoadingImages = false;
       });
     } catch (e) {
-      print('Error loading gallery images: $e');
+      debugPrint('Error loading gallery images: $e');
       setState(() {
         _isLoadingImages = false;
       });
