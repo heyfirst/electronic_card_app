@@ -25,8 +25,36 @@ if [[ $REPLY =~ ^[Yy]$ ]]; then
     ./set-secrets.sh
 fi
 
+# Check assets files
+echo "📂 Checking assets files..."
+echo "=== Main images ==="
+ls -lh assets/images/ 2>/dev/null || echo "⚠️  assets/images/ not found"
+echo ""
+echo "=== Journey of us ==="
+if [ -d "assets/images/journey-of-us/" ]; then
+    echo "Total files: $(find assets/images/journey-of-us/ -type f | wc -l | tr -d ' ')"
+    ls -lh assets/images/journey-of-us/
+else
+    echo "⚠️  assets/images/journey-of-us/ not found"
+fi
+echo ""
+echo "=== Preview images ==="
+ls -lh assets/images/perview/ 2>/dev/null || echo "⚠️  assets/images/perview/ not found"
+echo ""
+echo "=== Icons ==="
+ls -lh assets/icons/ 2>/dev/null || echo "⚠️  assets/icons/ not found"
+echo ""
+echo "=== Checking critical files ==="
+[ -f "assets/images/main-logo.png" ] && echo "✓ main-logo.png exists" || echo "✗ main-logo.png missing"
+[ -f "assets/images/mini-logo.png" ] && echo "✓ mini-logo.png exists" || echo "✗ mini-logo.png missing"
+[ -f "assets/images/thank-you-logo.png" ] && echo "✓ thank-you-logo.png exists" || echo "✗ thank-you-logo.png missing"
+[ -f "assets/icons/wedding-invitation.png" ] && echo "✓ wedding-invitation.png exists" || echo "✗ wedding-invitation.png missing"
+[ -f "assets/images/journey-of-us/timeline_metadata.json" ] && echo "✓ timeline_metadata.json exists" || echo "✗ timeline_metadata.json missing"
+echo ""
+
 # Clean previous builds
 echo "🧹 Cleaning previous builds..."
+rm -rf build
 flutter clean
 flutter pub get
 
