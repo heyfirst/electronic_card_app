@@ -132,17 +132,6 @@ class _GalleryPageState extends State<GalleryPage>
         galleryImages.addAll(group.images.map((img) => img.path));
       }
 
-      // Precache all gallery images for better performance
-      if (mounted) {
-        for (var imagePath in galleryImages) {
-          try {
-            await precacheImage(AssetImage(imagePath), context);
-          } catch (e) {
-            debugPrint('Error precaching image $imagePath: $e');
-          }
-        }
-      }
-
       if (mounted) {
         setState(() {
           _isLoadingImages = false;
@@ -415,7 +404,7 @@ class _GalleryPageState extends State<GalleryPage>
   }
 }
 
-class WeddingTimelineModal extends StatefulWidget {
+class WeddingTimelineModal extends StatelessWidget {
   final List<String> images;
   final List<JourneyItem> journeyItems;
   final List<YearGroup> yearGroups;
@@ -427,37 +416,13 @@ class WeddingTimelineModal extends StatefulWidget {
     required this.yearGroups,
   });
 
-  @override
-  State<WeddingTimelineModal> createState() => _WeddingTimelineModalState();
-}
-
-class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
-  bool _isImagesReady = false;
-
-  @override
-  void initState() {
-    super.initState();
-    _prepareImages();
-  }
-
-  Future<void> _prepareImages() async {
-    // Give a small delay to let the modal animation complete
-    await Future.delayed(const Duration(milliseconds: 100));
-
-    if (mounted) {
-      setState(() {
-        _isImagesReady = true;
-      });
-    }
-  }
-
   void _precacheJourneyImages(BuildContext context, int index) {
-    if (widget.journeyItems.isEmpty) return;
+    if (journeyItems.isEmpty) return;
 
     // Precache current image
-    if (index >= 0 && index < widget.journeyItems.length) {
+    if (index >= 0 && index < journeyItems.length) {
       precacheImage(
-        AssetImage(widget.journeyItems[index].imagePath),
+        AssetImage(journeyItems[index].imagePath),
         context,
       ).catchError((_) {});
     }
@@ -465,9 +430,9 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
     // Precache next 2 images
     for (int i = 1; i <= 2; i++) {
       final nextIndex = index + i;
-      if (nextIndex < widget.journeyItems.length) {
+      if (nextIndex < journeyItems.length) {
         precacheImage(
-          AssetImage(widget.journeyItems[nextIndex].imagePath),
+          AssetImage(journeyItems[nextIndex].imagePath),
           context,
         ).catchError((_) {});
       }
@@ -477,7 +442,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
     final prevIndex = index - 1;
     if (prevIndex >= 0) {
       precacheImage(
-        AssetImage(widget.journeyItems[prevIndex].imagePath),
+        AssetImage(journeyItems[prevIndex].imagePath),
         context,
       ).catchError((_) {});
     }
@@ -493,68 +458,41 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
       body: SafeArea(
         child: Stack(
           children: [
-            // Loading Indicator
-            if (!_isImagesReady)
-              Container(
-                color: const Color(0xFFF5F5F0),
-                child: Center(
-                  child: Column(
-                    mainAxisAlignment: MainAxisAlignment.center,
-                    children: [
-                      CircularProgressIndicator(
-                        color: kPrimaryColor,
-                        strokeWidth: 3,
-                      ),
-                      const SizedBox(height: 24),
-                      Text(
-                        'กำลังเตรียมรูปภาพ...',
-                        style: TextStyle(
-                          fontSize: 16,
-                          color: kPrimaryColor,
-                          fontWeight: FontWeight.w500,
-                        ),
-                      ),
-                    ],
-                  ),
-                ),
-              ),
-
             // Main Content
-            if (_isImagesReady)
-              Column(
-                children: [
-                  const SizedBox(height: 70),
-                  Expanded(
-                    child: SingleChildScrollView(
-                      physics: const BouncingScrollPhysics(
-                        parent: AlwaysScrollableScrollPhysics(),
-                      ),
-                      padding: EdgeInsets.symmetric(
-                        horizontal: isDesktop ? 60 : 20,
-                        vertical: 20,
-                      ),
-                      child: Center(
-                        child: Container(
-                          constraints: BoxConstraints(
-                            maxWidth: isDesktop ? 1400 : double.infinity,
-                          ),
-                          child: Column(
-                            children: [
-                              // Timeline by Year
-                              if (widget.yearGroups.isNotEmpty)
-                                _buildYearTimeline(context, isDesktop)
-                              else if (widget.journeyItems.isNotEmpty)
-                                _buildWeddingTimeline(context, isDesktop)
-                              else
-                                _buildPhotoGrid(context, isDesktop),
-                            ],
-                          ),
+            Column(
+              children: [
+                const SizedBox(height: 70),
+                Expanded(
+                  child: SingleChildScrollView(
+                    physics: const BouncingScrollPhysics(
+                      parent: AlwaysScrollableScrollPhysics(),
+                    ),
+                    padding: EdgeInsets.symmetric(
+                      horizontal: isDesktop ? 60 : 20,
+                      vertical: 20,
+                    ),
+                    child: Center(
+                      child: Container(
+                        constraints: BoxConstraints(
+                          maxWidth: isDesktop ? 1400 : double.infinity,
+                        ),
+                        child: Column(
+                          children: [
+                            // Timeline by Year
+                            if (yearGroups.isNotEmpty)
+                              _buildYearTimeline(context, isDesktop)
+                            else if (journeyItems.isNotEmpty)
+                              _buildWeddingTimeline(context, isDesktop)
+                            else
+                              _buildPhotoGrid(context, isDesktop),
+                          ],
                         ),
                       ),
                     ),
                   ),
-                ],
-              ),
+                ),
+              ],
+            ),
 
             // Close Button (Fixed)
             Positioned(
@@ -588,8 +526,12 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
   }
 
   Widget _buildYearTimeline(BuildContext context, bool isDesktop) {
-    return Column(
-      children: widget.yearGroups.map((yearGroup) {
+    return ListView.builder(
+      shrinkWrap: true,
+      physics: const NeverScrollableScrollPhysics(),
+      itemCount: yearGroups.length,
+      itemBuilder: (context, yearIndex) {
+        final yearGroup = yearGroups[yearIndex];
         return Column(
           children: [
             // Year Header
@@ -678,114 +620,45 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
             const SizedBox(height: 48),
           ],
         );
-      }).toList(),
+      },
     );
   }
 
   Widget _buildYearImagesGrid(BuildContext context, YearGroup yearGroup) {
-    return Wrap(
-      spacing: 16,
-      runSpacing: 16,
-      alignment: WrapAlignment.center,
-      children: yearGroup.images.asMap().entries.map((entry) {
-        final imageMetadata = entry.value;
-        final globalIndex = widget.images.indexOf(imageMetadata.path);
-        return GestureDetector(
-          onTap: () => _showImageViewer(context, globalIndex),
-          child: Hero(
-            tag: 'gallery_image_$globalIndex',
-            child: Container(
-              width: 280,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    spreadRadius: 0,
-                    blurRadius: 12,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
-                    ),
-                    child: Image.asset(
-                      imageMetadata.path,
-                      width: 280,
-                      height: 350,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: 280,
-                        height: 350,
-                        color: Colors.grey[300],
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey[600],
-                          size: 48,
-                        ),
-                      ),
-                    ),
-                  ),
-                  Padding(
-                    padding: const EdgeInsets.all(16),
-                    child: Column(
-                      crossAxisAlignment: CrossAxisAlignment.start,
-                      children: [
-                        Text(
-                          imageMetadata.title,
-                          style: TextStyle(
-                            fontSize: 14,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
-                          ),
-                          maxLines: 1,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                        const SizedBox(height: 4),
-                        Text(
-                          imageMetadata.description,
-                          style: TextStyle(
-                            fontSize: 12,
-                            color: Colors.grey[600],
-                          ),
-                          maxLines: 2,
-                          overflow: TextOverflow.ellipsis,
-                        ),
-                      ],
-                    ),
-                  ),
-                ],
-              ),
-            ),
-          ),
-        );
-      }).toList(),
-    );
-  }
+    // Calculate grid height based on number of items
+    final itemCount = yearGroup.images.length;
+    final crossAxisCount = (MediaQuery.of(context).size.width / 300)
+        .floor()
+        .clamp(1, 4);
+    final rowCount = (itemCount / crossAxisCount).ceil();
+    final gridHeight =
+        (rowCount * 500.0) + ((rowCount - 1) * 16.0); // item height + spacing
 
-  Widget _buildYearImagesCarousel(BuildContext context, YearGroup yearGroup) {
-    return Column(
-      children: yearGroup.images.asMap().entries.map((entry) {
-        final imageMetadata = entry.value;
-        final globalIndex = widget.images.indexOf(imageMetadata.path);
-        return Padding(
-          padding: const EdgeInsets.only(bottom: 16),
-          child: GestureDetector(
+    return SizedBox(
+      height: gridHeight,
+      child: GridView.builder(
+        gridDelegate: SliverGridDelegateWithMaxCrossAxisExtent(
+          maxCrossAxisExtent: 300,
+          childAspectRatio: 0.7,
+          crossAxisSpacing: 16,
+          mainAxisSpacing: 16,
+        ),
+        itemCount: yearGroup.images.length,
+        itemBuilder: (context, index) {
+          final imageMetadata = yearGroup.images[index];
+          final globalIndex = images.indexOf(imageMetadata.path);
+          // Skip if not found
+          if (globalIndex < 0) return const SizedBox.shrink();
+
+          return GestureDetector(
             onTap: () => _showImageViewer(context, globalIndex),
             child: Hero(
-              tag: 'gallery_image_$globalIndex',
+              tag: 'gallery_image_${imageMetadata.path}',
               child: Container(
-                width: double.infinity,
+                width: 280,
                 decoration: BoxDecoration(
                   color: Colors.white,
-                  borderRadius: BorderRadius.circular(12),
+                  borderRadius: BorderRadius.circular(8),
                   boxShadow: [
                     BoxShadow(
                       color: Colors.black.withValues(alpha: 0.15),
@@ -800,16 +673,17 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
                   children: [
                     ClipRRect(
                       borderRadius: const BorderRadius.only(
-                        topLeft: Radius.circular(12),
-                        topRight: Radius.circular(12),
+                        topLeft: Radius.circular(8),
+                        topRight: Radius.circular(8),
                       ),
                       child: Image.asset(
                         imageMetadata.path,
-                        width: double.infinity,
+                        width: 280,
+                        height: 350,
                         fit: BoxFit.cover,
                         errorBuilder: (context, error, stackTrace) => Container(
-                          width: double.infinity,
-                          height: 300,
+                          width: 280,
+                          height: 350,
                           color: Colors.grey[300],
                           child: Icon(
                             Icons.image_not_supported,
@@ -819,26 +693,127 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
                         ),
                       ),
                     ),
-                    if (imageMetadata.title.isNotEmpty)
-                      Padding(
-                        padding: const EdgeInsets.all(12),
-                        child: Text(
-                          imageMetadata.title,
-                          style: TextStyle(
-                            fontSize: 13,
-                            fontWeight: FontWeight.bold,
-                            color: kPrimaryColor,
+                    Padding(
+                      padding: const EdgeInsets.all(16),
+                      child: Column(
+                        crossAxisAlignment: CrossAxisAlignment.start,
+                        children: [
+                          Text(
+                            imageMetadata.title,
+                            style: TextStyle(
+                              fontSize: 14,
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryColor,
+                            ),
+                            maxLines: 1,
+                            overflow: TextOverflow.ellipsis,
                           ),
-                          textAlign: TextAlign.center,
-                        ),
+                          const SizedBox(height: 4),
+                          Text(
+                            imageMetadata.description,
+                            style: TextStyle(
+                              fontSize: 12,
+                              color: Colors.grey[600],
+                            ),
+                            maxLines: 2,
+                            overflow: TextOverflow.ellipsis,
+                          ),
+                        ],
                       ),
+                    ),
                   ],
                 ),
               ),
             ),
-          ),
-        );
-      }).toList(),
+          );
+        },
+      ),
+    );
+  }
+
+  Widget _buildYearImagesCarousel(BuildContext context, YearGroup yearGroup) {
+    // Calculate list height
+    final itemHeight = 400.0; // approximate height per item
+    final listHeight =
+        (yearGroup.images.length * itemHeight) +
+        ((yearGroup.images.length - 1) * 16.0);
+
+    return SizedBox(
+      height: listHeight,
+      child: ListView.builder(
+        itemCount: yearGroup.images.length,
+        itemBuilder: (context, index) {
+          final imageMetadata = yearGroup.images[index];
+          final globalIndex = images.indexOf(imageMetadata.path);
+          // Skip if not found
+          if (globalIndex < 0) return const SizedBox.shrink();
+
+          return Padding(
+            padding: const EdgeInsets.only(bottom: 16),
+            child: GestureDetector(
+              onTap: () => _showImageViewer(context, globalIndex),
+              child: Hero(
+                tag: 'gallery_image_${imageMetadata.path}',
+                child: Container(
+                  width: double.infinity,
+                  decoration: BoxDecoration(
+                    color: Colors.white,
+                    borderRadius: BorderRadius.circular(12),
+                    boxShadow: [
+                      BoxShadow(
+                        color: Colors.black.withValues(alpha: 0.15),
+                        spreadRadius: 0,
+                        blurRadius: 12,
+                        offset: const Offset(0, 4),
+                      ),
+                    ],
+                  ),
+                  child: Column(
+                    crossAxisAlignment: CrossAxisAlignment.start,
+                    children: [
+                      ClipRRect(
+                        borderRadius: const BorderRadius.only(
+                          topLeft: Radius.circular(12),
+                          topRight: Radius.circular(12),
+                        ),
+                        child: Image.asset(
+                          imageMetadata.path,
+                          width: double.infinity,
+                          fit: BoxFit.cover,
+                          errorBuilder: (context, error, stackTrace) =>
+                              Container(
+                                width: double.infinity,
+                                height: 300,
+                                color: Colors.grey[300],
+                                child: Icon(
+                                  Icons.image_not_supported,
+                                  color: Colors.grey[600],
+                                  size: 48,
+                                ),
+                              ),
+                        ),
+                      ),
+                      if (imageMetadata.title.isNotEmpty)
+                        Padding(
+                          padding: const EdgeInsets.all(12),
+                          child: Text(
+                            imageMetadata.title,
+                            style: TextStyle(
+                              fontSize: 13,
+                              fontWeight: FontWeight.bold,
+                              color: kPrimaryColor,
+                            ),
+                            textAlign: TextAlign.center,
+                          ),
+                        ),
+                    ],
+                  ),
+                ),
+              ),
+            ),
+          );
+        },
+      ),
     );
   }
 
@@ -851,7 +826,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
             spacing: 16,
             runSpacing: 16,
             alignment: WrapAlignment.center,
-            children: widget.journeyItems.map((item) {
+            children: journeyItems.map((item) {
               return _buildTimelineCard(context, item, isDesktop);
             }).toList(),
           );
@@ -862,13 +837,13 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
       return SizedBox(
         height: MediaQuery.of(context).size.height * 0.75,
         child: PageView.builder(
-          itemCount: widget.journeyItems.length,
+          itemCount: journeyItems.length,
           onPageChanged: (index) {
             // Precache nearby images when swiping
             _precacheJourneyImages(context, index);
           },
           itemBuilder: (context, index) {
-            final item = widget.journeyItems[index];
+            final item = journeyItems[index];
             return GestureDetector(
               onTap: () => _showImageViewer(context, index),
               child: Padding(
@@ -998,7 +973,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
                         borderRadius: BorderRadius.circular(20),
                       ),
                       child: Text(
-                        '${index + 1} / ${widget.journeyItems.length}',
+                        '${index + 1} / ${journeyItems.length}',
                         style: TextStyle(
                           fontSize: 13,
                           color: kAccentColor,
@@ -1025,7 +1000,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
     final imageHeight = isDesktop ? 350.0 : 200.0;
 
     return GestureDetector(
-      onTap: () => _showImageViewer(context, widget.journeyItems.indexOf(item)),
+      onTap: () => _showImageViewer(context, journeyItems.indexOf(item)),
       child: Container(
         width: cardWidth,
         decoration: BoxDecoration(
@@ -1132,12 +1107,12 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
           mainAxisSpacing: 16,
           childAspectRatio: 0.75,
         ),
-        itemCount: widget.images.length,
+        itemCount: images.length,
         itemBuilder: (context, index) {
           return GestureDetector(
             onTap: () => _showImageViewer(context, index),
             child: Hero(
-              tag: 'gallery_image_$index',
+              tag: 'gallery_image_${images[index]}',
               child: Container(
                 decoration: BoxDecoration(
                   borderRadius: BorderRadius.circular(8),
@@ -1152,7 +1127,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(widget.images[index], fit: BoxFit.cover),
+                  child: Image.asset(images[index], fit: BoxFit.cover),
                 ),
               ),
             ),
@@ -1164,7 +1139,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
       return SizedBox(
         height: 500,
         child: PageView.builder(
-          itemCount: widget.images.length,
+          itemCount: images.length,
           itemBuilder: (context, index) {
             return GestureDetector(
               onTap: () => _showImageViewer(context, index),
@@ -1184,7 +1159,7 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(12),
                   child: Image.asset(
-                    widget.images[index],
+                    images[index],
                     fit: BoxFit.cover,
                     errorBuilder: (context, error, stackTrace) => Container(
                       decoration: BoxDecoration(
@@ -1224,9 +1199,9 @@ class _WeddingTimelineModalState extends State<WeddingTimelineModal> {
           return FadeTransition(
             opacity: animation,
             child: ImageViewerModal(
-              images: widget.images,
+              images: images,
               initialIndex: initialIndex,
-              journeyItems: widget.journeyItems,
+              journeyItems: journeyItems,
             ),
           );
         },
@@ -1331,8 +1306,7 @@ class _ImageViewerModalState extends State<ImageViewerModal> {
             itemBuilder: (context, index) {
               return Center(
                 child: Hero(
-                  tag:
-                      'gallery_image_${widget.journeyItems.isNotEmpty ? widget.journeyItems[index].id : index}',
+                  tag: 'gallery_image_${widget.images[index]}',
                   child: InteractiveViewer(
                     child: Image.asset(
                       widget.images[index],
