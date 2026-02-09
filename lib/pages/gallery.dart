@@ -143,14 +143,18 @@ class _GalleryPageState extends State<GalleryPage>
         }
       }
 
-      setState(() {
-        _isLoadingImages = false;
-      });
+      if (mounted) {
+        setState(() {
+          _isLoadingImages = false;
+        });
+      }
     } catch (e) {
-      // print('Error loading gallery images: $e');
-      setState(() {
-        _isLoadingImages = false;
-      });
+      debugPrint('Error loading gallery images: $e');
+      if (mounted) {
+        setState(() {
+          _isLoadingImages = false;
+        });
+      }
     }
   }
 
@@ -1159,7 +1163,11 @@ class _ImageViewerModalState extends State<ImageViewerModal> {
     _pageController = PageController(initialPage: widget.initialIndex);
 
     // Precache current and nearby images for smoother experience
-    _precacheNearbyImages(widget.initialIndex);
+    WidgetsBinding.instance.addPostFrameCallback((_) {
+      if (mounted) {
+        _precacheNearbyImages(widget.initialIndex);
+      }
+    });
   }
 
   void _precacheNearbyImages(int index) {
@@ -1212,11 +1220,13 @@ class _ImageViewerModalState extends State<ImageViewerModal> {
           PageView.builder(
             controller: _pageController,
             onPageChanged: (index) {
-              setState(() {
-                currentIndex = index;
-              });
-              // Precache nearby images when page changes
-              _precacheNearbyImages(index);
+              if (mounted) {
+                setState(() {
+                  currentIndex = index;
+                });
+                // Precache nearby images when page changes
+                _precacheNearbyImages(index);
+              }
             },
             itemCount: widget.images.length,
             itemBuilder: (context, index) {
@@ -1357,7 +1367,7 @@ class _ImageViewerModalState extends State<ImageViewerModal> {
                     child: Row(
                       mainAxisSize: MainAxisSize.min,
                       children: [
-                        Icon(
+                        const Icon(
                           Icons.calendar_today,
                           color: Colors.white,
                           size: 16,
