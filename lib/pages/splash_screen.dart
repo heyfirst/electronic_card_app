@@ -52,7 +52,7 @@ class _SplashScreenState extends State<SplashScreen>
     // Start initial animation
     _animationController.forward();
 
-    // Start white fade and navigate after delay
+    // Navigate after animation completes
     Future.delayed(const Duration(milliseconds: 2500), () {
       if (mounted) {
         _whiteFadeController.forward().then((_) {
