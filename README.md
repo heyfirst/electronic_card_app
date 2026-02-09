@@ -1,24 +1,67 @@
 # 💒 Electronic Wedding Card App
 
-A beautiful Flutter web application for wedding invitations with wishes collection system.
+A beautiful and performant Flutter web application for wedding invitations with an integrated wishes collection system. Optimized for fast loading and responsive across all devices.
 
 ## ✨ Features
 
-- **Digital Wedding Invitation** - Beautiful animated wedding card
-- **Wedding Schedule** - Timeline of wedding events
-- **Photo Gallery** - Wedding photo gallery with viewer
-- **Wishes Collection** - Guests can send wishes with photos
-- **Thank You Page** - Display collected wishes
-- **Responsive Design** - Works on all devices
-- **Thai Fonts** - Beautiful Thai typography support
+- **Digital Wedding Invitation** - Beautiful animated wedding card with smooth transitions
+- **Wedding Schedule** - Timeline of wedding events with location maps
+- **Photo Gallery** - Optimized wedding photo gallery with timeline viewer
+- **Wishes Collection** - Guests can send wishes with photo uploads
+- **Thank You Page** - Beautiful display of collected wishes
+- **Responsive Design** - Seamless experience on all devices
+- **Thai Fonts** - Beautiful Thai typography using Google Fonts
+- **Performance Optimized** - Image precaching and optimization for fast loading
+- **Progressive Web App** - Can be installed on mobile devices
+
+## 🏗️ Project Structure
+
+```
+lib/
+├── pages/              # All page components
+│   ├── gallery.dart    # Photo gallery with timeline
+│   ├── schedule.dart   # Wedding schedule
+│   ├── splash_screen.dart
+│   ├── thank_you_page.dart
+│   └── wishes.dart     # Wishes collection
+├── config/             # Configuration files
+│   └── api_config.dart
+├── utils/              # Utility functions
+│   └── utils.dart
+├── main.dart           # App entry point
+└── font_styles.dart    # Typography styles
+
+assets/
+├── images/             # Optimized images (67% size reduction)
+│   ├── journey-of-us/  # Timeline photos (19MB total)
+│   └── perview/        # Preview images
+├── icons/              # App icons
+└── fonts/              # Custom fonts
+
+docs/                   # Documentation
+scripts/                # Build and optimization scripts
+.github/
+├── workflows/          # CI/CD workflows
+└── BRANCH_PROTECTION.md
+```
+
+## ⚡ Performance Optimizations
+
+- **Image Optimization**: All images compressed (reduced from 58MB to 19MB)
+- **Image Precaching**: Critical images loaded during splash screen
+- **Nginx Caching**: Aggressive caching for static assets (7 days for images)
+- **Gzip Compression**: Enabled for text-based files
+- **Code Splitting**: Optimized Flutter web build
+- **Lazy Loading**: Images loaded as needed
 
 ## 🚀 Quick Start
 
 ### Prerequisites
 
-- Flutter SDK (latest stable)
+- Flutter SDK (3.9.2 or later)
 - Dart SDK
 - Git
+- (Optional) ImageMagick for image optimization
 
 ### Installation
 
@@ -34,13 +77,42 @@ flutter pub get
 flutter run -d chrome
 ```
 
+### Development
+
+```bash
+# Run with hot reload
+flutter run -d chrome
+
+# Analyze code
+flutter analyze
+
+# Format code
+dart format lib/
+
+# Run tests
+flutter test
+```
+
+## 🖼️ Image Optimization
+
+Images are pre-optimized, but if you add new images:
+
+```bash
+# Run optimization script
+./scripts/optimize-images.sh
+
+# Rebuild
+flutter clean
+flutter build web --release
+```
+
+See [docs/IMAGE_OPTIMIZATION.md](docs/IMAGE_OPTIMIZATION.md) for details.
+
 ## 🌐 Deployment
 
-This project supports both **manual** and **automatic** deployment to Fly.io.
+### 🎯 Tag-Based Deployment (Recommended)
 
-### 🎯 Auto Deployment (Recommended)
-
-**Automatic deployment triggers on every push to `main` branch.**
+**Deployment triggers only when you create a version tag.**
 
 #### Setup Steps:
 
@@ -53,35 +125,42 @@ This project supports both **manual** and **automatic** deployment to Fly.io.
 2. **Add GitHub Secrets:**
     - Go to GitHub repository → Settings → Secrets and variables → Actions
     - Create these secrets:
-        - Name: `FLY_API_TOKEN`  
-          Value: [your fly.io token from step 1]
-        - Name: `API_BASE_URL` (optional)  
-          Value: `[your url service]`
+        - `FLY_API_TOKEN`: [your fly.io token]
+        - `API_BASE_URL`: [your backend API URL] (optional)
 
-3. **Push to main branch:**
+3. **Deploy with version tag:**
 
     ```bash
+    # Commit your changes
+    git add .
+    git commit -m "feat: Your feature description"
     git push origin main
+
+    # Create and push version tag
+    git tag -a v1.0.0 -m "Release version 1.0.0"
+    git push origin v1.0.0
     ```
 
 4. **Done!** 🎉 GitHub Actions will automatically:
+    - Check assets integrity
+    - Analyze code
     - Build Flutter web app
     - Deploy to Fly.io
     - Your app will be live at: https://ben-mae-the-wedding.fly.dev
 
-#### Auto Deploy Features:
+#### Deployment Features:
 
-- ✅ Triggered on every push to `main`
-- ✅ Automatic Flutter web build
-- ✅ Code analysis and testing
+- ✅ Triggered only on version tags (v\*)
+- ✅ Automatic image optimization checks
+- ✅ Code analysis before deploy
 - ✅ Zero-downtime deployment
-- ✅ Deployment status notifications
+- ✅ Version tracking
 
 ---
 
 ### 🔧 Manual Deployment
 
-For one-time deployments or when you need more control.
+For one-time deployments or local testing.
 
 #### Prerequisites:
 
@@ -176,146 +255,241 @@ assets/
     └── deploy.yml       # Auto Deployment
 ```
 
+## � Technologies Used
+
+- **Frontend**: Flutter Web
+- **Language**: Dart 3.9.2
+- **Fonts**: Google Fonts (Thai typography)
+- **Image Optimization**: ImageMagick
+- **Hosting**: Fly.io
+- **CI/CD**: GitHub Actions
+- **Web Server**: Nginx (Alpine)
+
+### Key Dependencies
+
+- `http`: API communication
+- `shared_preferences`: Local storage
+- `image_picker`: Photo uploads
+- `url_launcher`: External links
+- `google_fonts`: Typography
+- `intl`: Date/time formatting
+
 ## 🔄 Development Workflow
 
-### For Contributors:
+### Branch Protection
+
+This project uses PR-based workflow with branch protection:
 
 1. **Create feature branch:**
 
     ```bash
     git checkout -b feature/my-feature
+    # or
+    git checkout -b fix/bug-description
     ```
 
 2. **Make changes and commit:**
 
     ```bash
     git add .
-    git commit -m "Add new feature"
-    ```
-
-3. **Push and create PR:**
-
-    ```bash
+    git commit -m "feat: Add new feature"
     git push origin feature/my-feature
     ```
 
-4. **CI automatically runs:**
-    - Code analysis
-    - Tests
-    - Build verification
+3. **Create Pull Request:**
+    - Go to GitHub repository
+    - Click "Compare & pull request"
+    - Fill in PR template
+    - Wait for CI checks to pass
+    - Request review (if required)
 
-5. **After review, merge to main:**
-    - Auto deployment triggers
-    - App updates automatically
+4. **After approval:**
+    - Merge PR via GitHub UI
+    - Branch protection ensures code quality
 
-### For Quick Changes:
-
-1. **Direct push to main:**
+5. **Deploy to production:**
 
     ```bash
-    git add .
-    git commit -m "Quick fix"
-    git push origin main
+    # After merge, create version tag
+    git checkout main
+    git pull origin main
+    git tag -a v1.0.1 -m "Release version 1.0.1"
+    git push origin v1.0.1
     ```
 
-2. **Auto deployment happens immediately!**
+### PR Template
+
+Automatically populated when creating PRs:
+
+- Description
+- Type of change
+- Testing checklist
+- Screenshots
+- Related issues
+
+See [.github/pull_request_template.md](.github/pull_request_template.md)
+
+### Branch Protection Rules
+
+- ✅ Require pull request before merging
+- ✅ Require status checks to pass
+- ✅ Require conversation resolution
+- ❌ No direct push to main
+- ❌ No force push
+
+See [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md) for setup guide.
 
 ## 🚀 Deployment Options Comparison
 
-| Feature      | Auto Deploy            | Manual Deploy    |
-| ------------ | ---------------------- | ---------------- |
-| **Trigger**  | Git push to main       | Manual command   |
-| **Setup**    | One-time GitHub secret | Local Fly.io CLI |
-| **Speed**    | ~3-5 minutes           | ~1-2 minutes     |
-| **CI/CD**    | ✅ Full pipeline       | ❌ No CI         |
-| **Rollback** | GitHub revert          | Manual flyctl    |
-| **Best for** | Production             | Development      |
+| Feature           | Tag-Based Deploy       | Manual Deploy    |
+| ----------------- | ---------------------- | ---------------- |
+| **Trigger**       | Version tag (v\*)      | Manual command   |
+| **Setup**         | One-time GitHub secret | Local Fly.io CLI |
+| **Speed**         | ~5-7 minutes           | ~2-3 minutes     |
+| **CI/CD**         | ✅ Full pipeline       | ❌ No CI         |
+| **Rollback**      | Revert tag/commit      | Manual flyctl    |
+| **Safeguards**    | ✅ Tests + Analysis    | ⚠️ Manual verify |
+| **Best for**      | Production releases    | Development test |
+| **Version Track** | ✅ Automatic           | ❌ Manual        |
 
-## 📊 Monitoring
+## 📊 Monitoring & Health
 
 ### GitHub Actions
 
 - View deployment status in Actions tab
-- Get notified on deployment failures
-- See build logs and deployment time
+- Get notified on failures
+- See detailed build logs
+- Track deployment time
 
 ### Fly.io Dashboard
 
-- Monitor app performance
-- View logs: `flyctl logs`
-- Check status: `flyctl status`
+```bash
+# View real-time logs
+flyctl logs
 
-### App Health
+# Check app status
+flyctl status
 
-- Health check endpoint: `/health`
-- Auto-scaling based on traffic
+# Monitor metrics
+flyctl dashboard
+```
+
+### Health Checks
+
+- Endpoint: `/health`
+- Auto-scaling enabled
 - Zero-downtime deployments
+- Automatic SSL/HTTPS
 
 ## 🛡️ Production Checklist
 
-Before going live:
+Before deploying:
 
-- [ ] Set up auto deployment
-- [ ] Configure production API_BASE_URL
-- [ ] Test deployment pipeline
-- [ ] Set up monitoring
-- [ ] Configure domain (optional)
-- [ ] Enable HTTPS (automatic with Fly.io)
+- [x] Images optimized (67% reduction achieved)
+- [x] Code analyzed and formatted
+- [x] Branch protection enabled
+- [x] CI/CD pipeline configured
+- [ ] Production API_BASE_URL set
+- [ ] Monitoring set up
+- [ ] Custom domain configured (optional)
+- [ ] HTTPS enabled (automatic with Fly.io)
+- [ ] Backup strategy defined
+
+## 🔧 Advanced Configuration
+
+### Custom Domain
+
+```bash
+# Add custom domain
+flyctl certs create yourdomain.com
+
+# Follow DNS instructions
+flyctl certs show yourdomain.com
+```
+
+### Scaling
+
+```bash
+# Scale instances
+flyctl scale count 2
+
+# Scale memory
+flyctl scale memory 512
+```
+
+### Environment-Specific Builds
+
+```bash
+# Development
+flutter build web --dart-define=ENV=dev
+
+# Production
+flutter build web --release --dart-define=ENV=prod
+```
 
 ## 🆘 Troubleshooting
 
-### Auto Deployment Issues:
+### Image Loading Issues
 
-**Build fails:**
+If images don't load on first visit:
 
 ```bash
-# Check GitHub Actions logs
-# Usually Flutter version or dependency issues
+# Re-optimize images
+./scripts/optimize-images.sh
+
+# Rebuild
+flutter clean
+flutter build web --release
 ```
 
-**Deployment fails:**
+### Deployment Failures
+
+**GitHub Actions fails:**
+
+- Check logs in Actions tab
+- Verify FLY_API_TOKEN secret is set
+- Ensure Flutter version compatibility
+
+**Manual deploy fails:**
+
+- Verify Fly.io CLI: `flyctl version`
+- Re-authenticate: `flyctl auth login`
+- Check app exists: `flyctl apps list`
+
+### Performance Issues
 
 ```bash
-# Check if FLY_API_TOKEN is set correctly in GitHub secrets
-# Verify Fly.io app exists: flyctl apps list
+# Analyze bundle size
+flutter build web --analyze-size
+
+# Check for large assets
+du -sh build/web/assets/
+
+# Verify nginx cache headers
+curl -I https://your-app.fly.dev/assets/images/main-logo.png
 ```
 
-### Manual Deployment Issues:
-
-**CLI not found:**
+### Build Issues
 
 ```bash
-# Reinstall Fly.io CLI
-curl -L https://fly.io/install.sh | sh
-```
-
-**Auth issues:**
-
-```bash
-# Re-login to Fly.io
-flyctl auth login
-```
-
-**Build issues:**
-
-```bash
-# Clean Flutter build
+# Complete clean rebuild
+rm -rf build
 flutter clean
 flutter pub get
+flutter build web --release
+
+# Verify no errors
+flutter analyze
+flutter test
 ```
 
-## 🎯 Live App
+## 📞 Support & Resources
 
-**Production URL:** https://ben-mae-the-wedding.fly.dev
-
-## 📞 Support
-
-For deployment issues:
-
-- Check GitHub Actions logs
-- Review Fly.io dashboard
-- Run `flyctl logs` for app logs
-- Check `flyctl status` for health
+- **Documentation**: `/docs` directory
+- **Issues**: GitHub Issues tab
+- **Image Optimization**: [docs/IMAGE_OPTIMIZATION.md](docs/IMAGE_OPTIMIZATION.md)
+- **Branch Protection**: [.github/BRANCH_PROTECTION.md](.github/BRANCH_PROTECTION.md)
+- **Fly.io Docs**: https://fly.io/docs
 
 ---
 
