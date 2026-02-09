@@ -5,8 +5,8 @@ import 'package:flutter/foundation.dart';
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
 
-import 'config/api_config.dart';
-import 'utils/utils.dart';
+import '../config/api_config.dart';
+import '../utils/utils.dart';
 
 // Global color constants
 const Color kPrimaryColor = Color(0xFF7E8B78);

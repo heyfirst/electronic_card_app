@@ -10,8 +10,8 @@ import 'package:http_parser/http_parser.dart';
 import 'package:image_picker/image_picker.dart';
 import 'package:shared_preferences/shared_preferences.dart';
 
-import 'config/api_config.dart';
-import 'main.dart';
+import '../config/api_config.dart';
+import '../main.dart';
 
 // Global color constant
 const Color kPrimaryColor = Color(0xFF7E8B78);
