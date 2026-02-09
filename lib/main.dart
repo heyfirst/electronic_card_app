@@ -13,6 +13,13 @@ import 'pages/wishes.dart';
 const Color kPrimaryColor = Color(0xFF7E8B78);
 
 void main() {
+  // Configure image cache for better memory management on mobile
+  WidgetsFlutterBinding.ensureInitialized();
+
+  // Set image cache limits (100MB cache, 1000 images max)
+  PaintingBinding.instance.imageCache.maximumSizeBytes = 100 * 1024 * 1024; // 100MB
+  PaintingBinding.instance.imageCache.maximumSize = 1000; // 1000 images
+
   runApp(const MyApp());
 }
 
@@ -331,6 +338,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     height: logoSize,
                     width: logoSize,
                     fit: BoxFit.contain,
+                    cacheWidth: (logoSize * 2).toInt(), // 2x for Retina
+                    cacheHeight: (logoSize * 2).toInt(),
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         height: logoSize,
@@ -667,6 +676,8 @@ class _MyHomePageState extends State<MyHomePage> with TickerProviderStateMixin {
                     height: screenWidth * 0.1,
                     width: screenWidth * 0.1,
                     fit: BoxFit.contain,
+                    cacheWidth: (screenWidth * 0.2).toInt(), // 2x for Retina
+                    cacheHeight: (screenWidth * 0.2).toInt(),
                     errorBuilder: (context, error, stackTrace) {
                       return Container(
                         height: screenWidth * 0.09,

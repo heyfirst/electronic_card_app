@@ -235,10 +235,12 @@ class _GalleryPageState extends State<GalleryPage>
                             : Image.asset(
                                 'assets/images/perview/gallery-preview.GIF',
                                 fit: BoxFit.cover,
+                                cacheHeight: 600, // Preview optimization
                                 errorBuilder: (context, error, stackTrace) {
                                   return Image.asset(
                                     'assets/images/gallery-preview.jpeg',
                                     fit: BoxFit.cover,
+                                    cacheHeight: 600,
                                     errorBuilder: (context, error, stackTrace) {
                                       return Container(
                                         height: 300,
@@ -681,6 +683,8 @@ class WeddingTimelineModal extends StatelessWidget {
                         width: 280,
                         height: 350,
                         fit: BoxFit.cover,
+                        cacheWidth: 560, // 2x for Retina displays
+                        cacheHeight: 700,
                         errorBuilder: (context, error, stackTrace) => Container(
                           width: 280,
                           height: 350,
@@ -780,6 +784,7 @@ class WeddingTimelineModal extends StatelessWidget {
                           imageMetadata.path,
                           width: double.infinity,
                           fit: BoxFit.cover,
+                          cacheHeight: 600, // Optimize for mobile screens
                           errorBuilder: (context, error, stackTrace) =>
                               Container(
                                 width: double.infinity,
@@ -873,6 +878,7 @@ class WeddingTimelineModal extends StatelessWidget {
                               item.imagePath,
                               width: double.infinity,
                               fit: BoxFit.cover,
+                              cacheHeight: 800, // Optimize for mobile PageView
                               errorBuilder: (context, error, stackTrace) =>
                                   Container(
                                     decoration: BoxDecoration(
@@ -1031,6 +1037,7 @@ class WeddingTimelineModal extends StatelessWidget {
                   width: double.infinity,
                   height: imageHeight,
                   fit: BoxFit.cover,
+                  cacheHeight: (imageHeight * 2).toInt(), // 2x for Retina
                   errorBuilder: (context, error, stackTrace) => Container(
                     width: double.infinity,
                     height: imageHeight,
@@ -1127,7 +1134,12 @@ class WeddingTimelineModal extends StatelessWidget {
                 ),
                 child: ClipRRect(
                   borderRadius: BorderRadius.circular(8),
-                  child: Image.asset(images[index], fit: BoxFit.cover),
+                  child: Image.asset(
+                    images[index],
+                    fit: BoxFit.cover,
+                    cacheWidth: 160, // Small thumbnail
+                    cacheHeight: 160,
+                  ),
                 ),
               ),
             ),
@@ -1161,6 +1173,8 @@ class WeddingTimelineModal extends StatelessWidget {
                   child: Image.asset(
                     images[index],
                     fit: BoxFit.cover,
+                    cacheWidth: 240, // Thumbnail optimization
+                    cacheHeight: 240,
                     errorBuilder: (context, error, stackTrace) => Container(
                       decoration: BoxDecoration(
                         gradient: LinearGradient(
@@ -1311,6 +1325,7 @@ class _ImageViewerModalState extends State<ImageViewerModal> {
                     child: Image.asset(
                       widget.images[index],
                       fit: BoxFit.contain,
+                      cacheWidth: 1500, // High-res for full-screen viewer
                       errorBuilder: (context, error, stackTrace) => Container(
                         width: 200,
                         height: 200,

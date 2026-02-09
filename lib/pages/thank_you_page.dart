@@ -870,6 +870,7 @@ class _ThankYouPageState extends State<ThankYouPage>
     Widget imageWidget = Image.network(
       proxyUrl,
       fit: BoxFit.cover,
+      cacheWidth: isInDetail ? 1200 : 600, // Optimize based on display size
       loadingBuilder: (context, child, loadingProgress) {
         if (loadingProgress == null) return child;
         return Center(
@@ -977,6 +978,7 @@ class _ThankYouPageState extends State<ThankYouPage>
                   child: Image.network(
                     proxyUrl,
                     fit: BoxFit.contain,
+                    cacheWidth: 1500, // High-res for modal viewer
                     loadingBuilder: (context, child, loadingProgress) {
                       if (loadingProgress == null) return child;
                       return Center(
