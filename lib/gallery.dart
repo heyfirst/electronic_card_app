@@ -625,75 +625,69 @@ class WeddingTimelineModal extends StatelessWidget {
   }
 
   Widget _buildYearImagesCarousel(BuildContext context, YearGroup yearGroup) {
-    final screenWidth = MediaQuery.of(context).size.width;
-    final imageWidth = (screenWidth - 48) / 2; // 2 columns with spacing
-
-    return Wrap(
-      spacing: 12,
-      runSpacing: 12,
-      alignment: WrapAlignment.center,
+    return Column(
       children: yearGroup.images.asMap().entries.map((entry) {
         final imageMetadata = entry.value;
         final globalIndex = images.indexOf(imageMetadata.path);
-        return GestureDetector(
-          onTap: () => _showImageViewer(context, globalIndex),
-          child: Hero(
-            tag: 'gallery_image_$globalIndex',
-            child: Container(
-              width: imageWidth,
-              decoration: BoxDecoration(
-                color: Colors.white,
-                borderRadius: BorderRadius.circular(8),
-                boxShadow: [
-                  BoxShadow(
-                    color: Colors.black.withValues(alpha: 0.15),
-                    spreadRadius: 0,
-                    blurRadius: 8,
-                    offset: const Offset(0, 4),
-                  ),
-                ],
-              ),
-              child: Column(
-                crossAxisAlignment: CrossAxisAlignment.start,
-                children: [
-                  ClipRRect(
-                    borderRadius: const BorderRadius.only(
-                      topLeft: Radius.circular(8),
-                      topRight: Radius.circular(8),
+        return Padding(
+          padding: const EdgeInsets.only(bottom: 16),
+          child: GestureDetector(
+            onTap: () => _showImageViewer(context, globalIndex),
+            child: Hero(
+              tag: 'gallery_image_$globalIndex',
+              child: Container(
+                width: double.infinity,
+                decoration: BoxDecoration(
+                  color: Colors.white,
+                  borderRadius: BorderRadius.circular(12),
+                  boxShadow: [
+                    BoxShadow(
+                      color: Colors.black.withValues(alpha: 0.15),
+                      spreadRadius: 0,
+                      blurRadius: 12,
+                      offset: const Offset(0, 4),
                     ),
-                    child: Image.asset(
-                      imageMetadata.path,
-                      width: imageWidth,
-                      height: imageWidth * 1.2,
-                      fit: BoxFit.cover,
-                      errorBuilder: (context, error, stackTrace) => Container(
-                        width: imageWidth,
-                        height: imageWidth * 1.2,
-                        color: Colors.grey[300],
-                        child: Icon(
-                          Icons.image_not_supported,
-                          color: Colors.grey[600],
-                          size: 32,
+                  ],
+                ),
+                child: Column(
+                  crossAxisAlignment: CrossAxisAlignment.start,
+                  children: [
+                    ClipRRect(
+                      borderRadius: const BorderRadius.only(
+                        topLeft: Radius.circular(12),
+                        topRight: Radius.circular(12),
+                      ),
+                      child: Image.asset(
+                        imageMetadata.path,
+                        width: double.infinity,
+                        fit: BoxFit.cover,
+                        errorBuilder: (context, error, stackTrace) => Container(
+                          width: double.infinity,
+                          height: 300,
+                          color: Colors.grey[300],
+                          child: Icon(
+                            Icons.image_not_supported,
+                            color: Colors.grey[600],
+                            size: 48,
+                          ),
                         ),
                       ),
                     ),
-                  ),
-                  if (imageMetadata.title.isNotEmpty)
-                    Padding(
-                      padding: const EdgeInsets.all(8),
-                      child: Text(
-                        imageMetadata.title,
-                        style: TextStyle(
-                          fontSize: 11,
-                          fontWeight: FontWeight.bold,
-                          color: kPrimaryColor,
+                    if (imageMetadata.title.isNotEmpty)
+                      Padding(
+                        padding: const EdgeInsets.all(12),
+                        child: Text(
+                          imageMetadata.title,
+                          style: TextStyle(
+                            fontSize: 13,
+                            fontWeight: FontWeight.bold,
+                            color: kPrimaryColor,
+                          ),
+                          textAlign: TextAlign.center,
                         ),
-                        maxLines: 2,
-                        overflow: TextOverflow.ellipsis,
-                        textAlign: TextAlign.center,
                       ),
-                    ),
-                ],
+                  ],
+                ),
               ),
             ),
           ),
